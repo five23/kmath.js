@@ -10,7 +10,7 @@ var kMath = {
 
 	/* @constant {Number} 1/(1 + sqrt(3)) */
 	F2: 0.36602540378444,
-
+	
 	/* @constant {Number} 1/3 */
 	F3: 0.33333333333332,
     
@@ -26,6 +26,9 @@ var kMath = {
 	/* @constant {Number} 1/(5 + sqrt(5)) */
 	G4: 0.13819660112501,
 
+	/* @constant {Number} 1/(sqrt(3)) */
+	H2: 0.57735026918963,
+	
 	/*
 	 * Convert float to int
 	 *
@@ -297,7 +300,6 @@ var kMath = {
 		[2, 1, 0, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [3, 1, 0, 2], [0, 0, 0, 0], [3, 2, 0, 1], [3, 2, 1, 0]
 	]),
 	
-
 	/*
 	 * Compute 1d Gradients
 	 *
@@ -332,7 +334,7 @@ var kMath = {
 	gradient2d: function (hash, x, y) {
 
 		// Convert low 3 bits of hash code into 8 simple
-		// gradient directions, and comput dot product
+		// gradient directions, and compute dot product
 
 		var h = (hash & 7) | 0;
 		var u = h < 4 ? x : y;
@@ -419,86 +421,42 @@ var kMath = {
 	 */
 	signedNoise2d: function (x, y) {
 
-		// Noise contributions from the three corners
-		var n0, n1, n2;
-
 		// Skew the input space to determine which simplexLookup cell we're in
-		var s = (x + y) * this.F2;
-		var xs = x + s;
-		var ys = y + s;
-		var i = this.floor32(xs);
-		var j = this.floor32(ys);
+		var i = this.floor32(x + (x + y) * this.F2);
+		var j = this.floor32(y + (x + y) * this.F2);
 
-		var t = (i + j) * this.G2;
-		 
-		// Unskew the cell origin back to (x,y) space
-		var X0 = i - t;
-		var Y0 = j - t;
-		
 		// The x,y distances from the cell origin
-		var x0 = x - X0;
-		var y0 = y - Y0;
+		var x0 = x - i + (i + j) * this.G2;
+		var y0 = y - j + (i + j) * this.G2;
 
-		var x1, y1, x2, y2;
-		var t0, t1, t2;
-		
-		// Offsets for second (middle) corner of simplexLookup in (i,j) coords
-		var i1, j1;
+		var i1 = 0;
+		var j1 = 1;
 		
 		// lower triangle, XY order: (0,0)->(1,0)->(1,1)
 		if (x0 > y0) {
 			i1 = 1;
 			j1 = 0;
 		}
-		// upper triangle, YX order: (0,0)->(0,1)->(1,1)
-		else {
-			i1 = 0;
-			j1 = 1;
-		} 
 
 		// Offsets for middle corner in (x,y) unskewed coords
-		x1 = x0 - i1 + this.G2;
-		y1 = y0 - j1 + this.G2;
+		var x1 = x0 - i1 + this.G2;
+		var y1 = y0 - j1 + this.G2;
 
 		// Offsets for last corner in (x,y) unskewed coords
-		x2 = x0 - 1.0 + 2.0 * this.G2;
-		y2 = y0 - 1.0 + 2.0 * this.G2;
+		var x2 = x0 - this.H2;
+		var y2 = y0 - this.H2;
 
-		// Wrap the integer indices at 256, to avoid indexing permutation[] out of bounds
 		i = i % 256;
 		j = j % 256;
-
-		// Calculate the contribution from the three corners
-		t0 = 0.5 - x0 * x0 - y0 * y0;
 		
-		if (t0 < 0.0) {
-			n0 = 0.0;
-		} else {
-			t0 *= t0;
-			n0 = t0 * t0 * this.gradient2d(this.permutation[i + this.permutation[j]], x0, y0);
-		}
-
-		t1 = 0.5 - x1 * x1 - y1 * y1;
+		var t0 = 0.5 - x0 * x0 - y0 * y0;
+		var t1 = 0.5 - x1 * x1 - y1 * y1;
+		var t2 = 0.5 - x2 * x2 - y2 * y2;				
 		
-		if (t1 < 0.0) {
-			n1 = 0.0;
-		} else {
-			t1 *= t1;
-			n1 = t1 * t1 * this.gradient2d(this.permutation[i + i1 + this.permutation[j + j1]], x1, y1);
-		}
+		var n0 = t0 * t0 * t0 * t0 * this.gradient2d(this.permutation[i + this.permutation[j]], x0, y0);	
+		var n1 = t1 * t1 * t1 * t1 * this.gradient2d(this.permutation[i + i1 + this.permutation[j + j1]], x1, y1);				
+		var n2 = t2 * t2 * t2 * t2 * this.gradient2d(this.permutation[i + 1 + this.permutation[j + 1]], x2, y2);
 
-		t2 = 0.5 - x2 * x2 - y2 * y2;
-		
-		if (t2 < 0.0) {
-			n2 = 0.0;
-		} else {
-			t2 *= t2;
-			n2 = t2 * t2 * this.gradient2d(this.permutation[i + 1 + this.permutation[j + 1]], x2, y2);
-		}
-
-		// Add contributions from each corner to get the final noise value.
-		// The result is scaled to return values in the interval [-1,1].
-		
 		return 40.0 * (n0 + n1 + n2);
 	},
 	
