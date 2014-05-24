@@ -141,48 +141,85 @@ http://en.wikipedia.org/wiki/Fresnel_integral
 zeta(x)
 -------
 
+The Riemann zeta function.
+
+http://en.wikipedia.org/wiki/Riemann_zeta_function
+
 erf(x)
 ------
+
+The "error function" (also called the Gauss error function) is a special function (non-elementary) of sigmoid shape which occurs in probability, statistics and partial differential equations.
+
+http://en.wikipedia.org/wiki/Error_function
 
 epsilon()
 ---------
 
+Returns machine epsilon.
+
 cantor(x)
 ---------
+
+The Cantor function, named after Georg Cantor, is an example of a function that is continuous, but not absolutely continuous. It is also referred to as the Devil's staircase, the Cantor staircase function, and the Cantor-Lebesgue function.
+
+http://en.wikipedia.org/wiki/Cantor_function
+
 
 csc(x)
 ------
 
+The length of the hypotenuse divided by the length of the opposite side.
+
 cosh(x)
 -------
+
+Hyperbolic cosine.
 
 sinh(x)
 -------
 
+Hyperbolic sine.
+
 tanh(x)
 -------
+
+Hyperbolic tangent.
 
 csch(x)
 -------
 
+Hyperbolic cosecant.
+
 coth(x)
 -------
+
+Hyperbolic cotangent
 
 acosh(x)
 --------
 
+Inverse Hyperbolic Cosine.
+
 asinh(x)
 --------
+
+Inverse Hyperbolic Sine.
 
 atanh(x)
 --------
 
+Inverse Hyperbolic Tangent.
 
 int(x)
 ------
 
+Cast float to integer.
+
 floor32(x)
 ----------
+
+Fast floor function.
+
 
 lerp(x, v0, v1)
 ---------------
