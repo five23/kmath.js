@@ -1,38 +1,46 @@
-kmath.js
-========
+# kmath.js
 
-csc(x)
-------
+## Usage
 
-cosh(x)
--------
 
-sinh(x)
--------
+Include kmath.js
 
-tanh(x)
--------
+	<script type="text/javascript" src="kmath.js"></script>
 
-csch(x)
--------
 
-coth(x)
--------
+Instantiate kMath object
 
-acosh(x)
---------
+	var kmath = new kMath();
 
-asinh(x)
---------
 
-atanh(x)
---------
+Do some math
+
+	var y = kmath.lngamma(1);  // 3.1780538303479458
+
+
+
+## Methods
+
 
 fsin(x)
 -------
+Returns a numeric value between ~~-1 and ~~1, representing the sine of the angle given in radians. The scaling factors (5214, 2.44E-4) were chosen arbitrarily and in haste, then truncated to squeeze a few more clock cycles out of the function, so the precision is only accurate to ~5 decimal places on the arc. ﻿ :
+
+	this.fsin = function (x) {
+		var b, c;
+		return x *= 5214, c = x << 17, x -= 8192, x <<= 18, x >>= 18,
+			x = x * x >> 12, b = 19900 - (3516 * x >> 14), b = 4096 - (x * b >> 16),
+			0 > c && (b = -b), 2.44E-4 * b;
+	};
+    
+Based on the methods discussed here: http://www.coranac.com/2009/07/sines
+
+Performance tests: http://jsperf.com/bitwise-sine/3﻿
 
 fcos(x)
 -------
+
+Bitwise cosine approximation, see fsin(x)
 
 unitstep(x)
 -----------
@@ -90,6 +98,34 @@ epsilon()
 
 cantor(x)
 ---------
+
+csc(x)
+------
+
+cosh(x)
+-------
+
+sinh(x)
+-------
+
+tanh(x)
+-------
+
+csch(x)
+-------
+
+coth(x)
+-------
+
+acosh(x)
+--------
+
+asinh(x)
+--------
+
+atanh(x)
+--------
+
 
 int(x)
 ------
