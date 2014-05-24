@@ -45,20 +45,35 @@ Bitwise cosine approximation, see fsin(x)
 unitstep(x)
 -----------
 
+Represents the unit step function, equal to 0 for x < 0 and 1 for x >= 0
+
+
 diracdelta(x)
 -------------
+
+The Dirac delta function, or δ function, is a generalized function, or distribution, on the real number line that is zero everywhere except at zero, with an integral of one over the entire real line.
+
+http://en.wikipedia.org/wiki/Dirac_delta_function
+
 
 kroneckerdelta(i, j)
 --------------------
 
+The discrete analog of the diracdelta(x) function.
+
+http://en.wikipedia.org/wiki/Kronecker_delta
+
 sgn(x)
 ------
+
+The sign function or signum function (from signum, Latin for "sign") is an odd mathematical function that extracts the sign of a real number.
+
+http://en.wikipedia.org/wiki/Sign_function
 
 sinc(x)
 -------
 
-triangle(x)
------------
+Normalized sinc function.
 
 mod(x,y)
 --------
