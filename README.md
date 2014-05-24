@@ -75,32 +75,68 @@ sinc(x)
 
 Normalized sinc function.
 
+http://en.wikipedia.org/wiki/Sinc_function
+
 mod(x,y)
 --------
+
+The remainder of division of one number by another.
+
+http://en.wikipedia.org/wiki/Modulo_operation
 
 square(x, n)
 ------------
 
+Square wave approximation.
+
 factorial(x)
 ------------
 
-lngamma(x)
-----------
+The factorial function (integers)
+
+http://en.wikipedia.org/wiki/Factorial
 
 gamma(x)
 --------
 
+Gamma function.
+
+http://en.wikipedia.org/wiki/Gamma
+
+
+lngamma(x)
+----------
+
+The logarithm of the gamma function.
+
+
 digamma(x)
 ----------
+
+The logarithmic derivative of the gamma function:
+
+http://en.wikipedia.org/wiki/Digamma_function
 
 H(x)
 ----
 
+The nth-Harmonic number.
+
+http://en.wikipedia.org/wiki/Harmonic_number
+
 phi(x)
 ------
 
+Phi distribution.
+
+
 fresnelc(x)
 -----------
+
+The Fresnel C integral C(x)
+
+http://en.wikipedia.org/wiki/Fresnel_integral
+
 
 zeta(x)
 -------
