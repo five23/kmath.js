@@ -1,6 +1,6 @@
-var kMath = function() {
+const kMath = function() {
 
-    var self = this;
+    const self = this;
 
     this.EPSILON = 2.2204460492503130808472633361816E-16;
 
@@ -27,9 +27,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.csc = function(x) {
-        return 1.0 / Math.sin(x);
-    };
+    this.csc = x => 1.0 / Math.sin(x);
 
 
     /*
@@ -38,9 +36,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.cosh = function(x) {
-        return 0.5 * (Math.exp(x) + Math.exp(-x));
-    };
+    this.cosh = x => 0.5 * (Math.exp(x) + Math.exp(-x));
 
 
     /*
@@ -49,8 +45,13 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.sinh = function(c) {
-        var d, b, h, e, f, g;
+    this.sinh = c => {
+        let d;
+        let b;
+        let h;
+        let e;
+        let f;
+        let g;
         if (0 === c)
             return 0;
         if (d = Math.abs(c), 0.12 > d) {
@@ -77,9 +78,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.tanh = function(x) {
-        return (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
-    };
+    this.tanh = x => (Math.exp(x) - Math.exp(-x)) / (Math.exp(x) + Math.exp(-x));
 
 
     /*
@@ -88,9 +87,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.csch = function(x) {
-        return 2 / (Math.exp(x) - Math.exp(-x));
-    };
+    this.csch = x => 2 / (Math.exp(x) - Math.exp(-x));
 
 
     /*
@@ -99,9 +96,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.coth = function(x) {
-        return 1 / self.tanh(x);
-    };
+    this.coth = x => 1 / self.tanh(x);
 
 
     /*
@@ -110,9 +105,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.acosh = function(x) {
-        return Math.log(x + Math.sqrt(x * x - 1));
-    };
+    this.acosh = x => Math.log(x + Math.sqrt(x * x - 1));
 
 
     /*
@@ -121,9 +114,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.asinh = function(x) {
-        return Math.log(x + Math.sqrt(x * x + 1));
-    };
+    this.asinh = x => Math.log(x + Math.sqrt(x * x + 1));
 
 
     /*
@@ -132,9 +123,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.atanh = function(x) {
-        return 0.5 * Math.log((1 + x) / (1 - x));
-    };
+    this.atanh = x => 0.5 * Math.log((1 + x) / (1 - x));
 
 
     /*
@@ -143,8 +132,9 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.fsin = function(x) {
-        var b, c;
+    this.fsin = x => {
+        let b;
+        let c;
         return x *= 5214, c = x << 17, x -= 8192, x <<= 18, x >>= 18,
             x = x * x >> 12, b = 19900 - (3516 * x >> 14), b = 4096 - (x * b >> 16),
             0 > c && (b = -b), 2.44E-4 * b;
@@ -157,7 +147,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.fcos = function(a, b) {
+    this.fcos = (a, b) => {
         a = 8192 - 5215.19 * a, b = a << 17, a = a - 8192 << 18 >> 18, a = 4096 - ((a * a >> 12) * (19900 - (3516 * (a * a >> 12) >> 14)) >> 16);
         return .0 > b && (a = -a), 2.44E-4 * a;
     };
@@ -169,9 +159,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.unitstep = function(x) {
-        return (x >= 0) ? (x ? 1 : 0.5) : 0;
-    };
+    this.unitstep = x => (x >= 0) ? (x ? 1 : 0.5) : 0;
 
 
     /*
@@ -180,9 +168,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.diracdelta = function(x) {
-        return (x === 0) ? Infinity : 0;
-    };
+    this.diracdelta = x => (x === 0) ? Infinity : 0;
 
 
     /*
@@ -192,9 +178,7 @@ var kMath = function() {
      * @param {Number} j
      * @returns {x}
      */
-    this.kroneckerdelta = function(i, j) {
-        return (i === j) ? 1 : 0;
-    };
+    this.kroneckerdelta = (i, j) => (i === j) ? 1 : 0;
 
 
     /*
@@ -203,9 +187,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.sgn = function(x) {
-        return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
-    };
+    this.sgn = x => typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
 
 
     /*
@@ -214,9 +196,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.sinc = function(x) {
-        return (x === 0) ? 1 : Math.sin(Math.PI * x) / (Math.PI * x);
-    };
+    this.sinc = x => (x === 0) ? 1 : Math.sin(Math.PI * x) / (Math.PI * x);
 
 
     /*
@@ -225,9 +205,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.triangle = function(x) {
-        return x - Math.floor(x);
-    };
+    this.triangle = x => x - Math.floor(x);
 
 
     /*
@@ -237,9 +215,7 @@ var kMath = function() {
      * @param {Number} y
      * @returns {x}
      */
-    this.mod = function(x, y) {
-        return x - Math.floor(x / y) * y;
-    };
+    this.mod = (x, y) => x - Math.floor(x / y) * y;
 
 
     /*
@@ -249,12 +225,11 @@ var kMath = function() {
      * @param {Number} m Partials
      * @returns {x}
      */
-    this.square = function(x, m) {
-
-        m = !m ? 2 * Math.PI : m;
-
-        return Math.cos(self.TAU * m * self.fcos(x)) * ((self.digamma(0.75 - m * self.fcos(x)) - self.digamma(0.25 - m * self.fcos(x))) / Math.PI) - 1;
-    };
+     this.square = (a, b) => {
+       b *= self.TAU;
+       a = 440 * a * self.TAU / 48000;
+       return 0.5 * (Math.cos(self.TAU * b * Math.cos(a)) * ((self.digamma(0.75 - b * Math.cos(a)) - self.digamma(0.25 - b * Math.cos(a))) / Math.PI) - 1);
+     };
 
 
     /*
@@ -263,7 +238,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.factorial = function(x) {
+    this.factorial = x => {
 
         // Empty product
         if (x === 0) {
@@ -275,7 +250,7 @@ var kMath = function() {
         }
         // Factor
         else {
-            var v = x;
+            let v = x;
             while (x > 1) {
                 v *= --x;
             }
@@ -290,10 +265,9 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.lngamma = function(x) {
-
-        var v = 0,
-            signum = 1;
+    this.lngamma = x => {
+        let v = 0;
+        let signum = 1;
 
         // Integer values reduce to simple factorial
         if (x % 1 === 0) {
@@ -331,10 +305,10 @@ var kMath = function() {
         else {
 
             // Lancsoz approximation, numerator
-            var n = 3.409662655323161e6 + x * (4.1623878911888916e6 + x * (2.222880419448303e6 + x * (678289.7014752217 + x * (129347.25852000745 + x * (15784.880455151022 + x * (1203.8342012464082 + x * (52.458333328046045 + x)))))));
+            const n = 3.409662655323161e6 + x * (4.1623878911888916e6 + x * (2.222880419448303e6 + x * (678289.7014752217 + x * (129347.25852000745 + x * (15784.880455151022 + x * (1203.8342012464082 + x * (52.458333328046045 + x)))))));
 
             // Denominator
-            var d = x * (5040 + x * (13068 + x * (13132 + x * (6769 + x * (1960 + x * (322 + x * (28 + x)))))));
+            const d = x * (5040 + x * (13068 + x * (13132 + x * (6769 + x * (1960 + x * (322 + x * (28 + x)))))));
 
             // (1/2)*log(2*pi) ...
             v = self.LOG2P - (6.5 + x) - (0.5 * Math.log(6.5 + x)) + (x * Math.log(6.5 + x));
@@ -350,7 +324,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.gamma = function(x) {
+    this.gamma = x => {
 
         // Integer values reduce to simple factorial
         if (x % 1 === 0) {
@@ -360,10 +334,10 @@ var kMath = function() {
         } else {
 
             // Lancsoz approximation, numerator
-            var n = 3.4096626553343013e6 + x * (4.1623878912255694e6 + x * (2.2228804194936445e6 + x * (678289.7015023368 + x * (129347.25852873185 + x * (15784.880456697823 + x * (1203.8342013887075 + x * (52.458333333333336 + x)))))));
+            const n = 3.4096626553343013e6 + x * (4.1623878912255694e6 + x * (2.2228804194936445e6 + x * (678289.7015023368 + x * (129347.25852873185 + x * (15784.880456697823 + x * (1203.8342013887075 + x * (52.458333333333336 + x)))))));
 
             // denominator ...
-            var d = x * (5040 + x * (13068 + x * (13132 + x * (6769 + x * (1960 + x * (322 + x * (28 + x)))))));
+            const d = x * (5040 + x * (13068 + x * (13132 + x * (6769 + x * (1960 + x * (322 + x * (28 + x)))))));
 
             return Math.sqrt(Math.PI * 2) * Math.exp(-x - 6.5 + (x - 0.5) * Math.log(x + 6.5)) * n / d;
         }
@@ -376,27 +350,23 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.digamma = function(x) {
-
-        var v = 0;
-
-        if (x <= 0 && x === Math.round(x)) {
-            return Infinity;
-        } else if (x < 0) {
-            return self.digamma(1.0 - x) + Math.PI / Math.tan(-Math.PI * x);
-        } else if (x <= self.EPSILON) {
-            return self.ZETA2 * x - 1.0 / x + self.GAMMA;
-        } else {
-            while (x < 12) {
-                v -= 1.0 / x++;
-            }
-
-            v += Math.log(x) - 0.5 / x;
-            x *= x;
-
-            return v - (0.08333333333333333 - (0.008333333333333333 - (0.0039682539682539 - (0.004166666666666 - 1 / (132 * x)) / x) / x) / x) / x;
-        }
-    };
+     // Input 0
+   this.digamma = b => {
+     let c = 0;
+     if (0 >= b && b === Math.round(b)) {
+       return Infinity;
+     }
+     if (0 > b) {
+       return self.digamma(1.0 - b) + Math.PI / Math.tan(-Math.PI * b);
+     }
+     if (b <= Number.EPSILON) {
+       return 1.64493406684822643647241516664603 * b - 1.0 / b + 0.57721566490153286060651209008240;
+     }
+     for (; 8.0 > b; b += 1) {
+       c -= 1.0 / b;
+     }
+     return c += Math.log(b) - 0.5 / (b *= b) - (0.08333333333333333 - (0.008333333333333333 - (0.0039682539682539 - (0.004166666666666 - 1 / (132 * b)) / b) / b) / b) / b;
+   };
 
 
     /*
@@ -405,9 +375,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.H = function(x) {
-        return self.digamma(++x) + self.GAMMA;
-    };
+    this.H = x => self.digamma(++x) + self.GAMMA;
 
 
     /*
@@ -416,9 +384,9 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.phi = function(x) {
+    this.phi = x => {
 
-        var signum = (x < 0) ? -1 : 1;
+        const signum = (x < 0) ? -1 : 1;
 
         x = Math.abs(x) / self.SQRT2;
 
@@ -432,14 +400,13 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.fresnelc = function(d) {
-
+    this.fresnelc = d => {
         d *= self.SQRT2PI / 2;
 
-        var a = d * d,
-            e = a * a,
-            b = 0,
-            c = 0;
+        const a = d * d;
+        const e = a * a;
+        let b = 0;
+        let c = 0;
 
         if (0.1 > a) {
             c = 2 * a * d / 3 * Math.exp(-e / 14);
@@ -469,8 +436,9 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.zeta = function(b) {
-        var a, c = Math.PI;
+    this.zeta = b => {
+        let a;
+        let c = Math.PI;
         if (0 === b) {
             return -0.5;
         }
@@ -486,8 +454,8 @@ var kMath = function() {
         if (1 > b) {
             return Infinity;
         }
-        for (a = 4.4 * Math.pow(b, -5.1), c = 1; 10 > c; c++) {
-            a += Math.pow(c, -b);
+        for (a = 4.4 * (b ** -5.1), c = 1; 10 > c; c++) {
+            a += c ** -b;
         }
         return a;
     };
@@ -499,9 +467,9 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.erf = function(a) {
+    this.erf = a => {
 
-        var b = 0 > a ? -1 : 1;
+        const b = 0 > a ? -1 : 1;
 
         a = Math.abs(a);
 
@@ -516,9 +484,10 @@ var kMath = function() {
      *
      * @returns {x}
      */
-    this.epsilon = function() {
-        var a = 1,
-            b, c;
+    this.epsilon = () => {
+        let a = 1;
+        let b;
+        let c;
         do {
             c = a;
             a /= 2;
@@ -534,7 +503,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.cantor = function(x) {
+    this.cantor = x => {
         if (x <= 0) {
             return 0;
         }
@@ -542,9 +511,9 @@ var kMath = function() {
             return 1;
         }
 
-        var a = 0,
-            b = 0.5,
-            c;
+        let a = 0;
+        let b = 0.5;
+        let c;
 
         do {
             c = Math.floor(x *= 3);
@@ -565,9 +534,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x} Integer
      */
-    this.int = function(x) {
-        return x | 0;
-    };
+    this.int = x => x | 0;
 
 
     /*
@@ -576,9 +543,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {x}
      */
-    this.floor32 = function(x) {
-        return x < 0 ? (x | 0) - 1 : x | 0;
-    };
+    this.floor32 = x => x < 0 ? (x | 0) - 1 : x | 0;
 
 
     /*
@@ -589,9 +554,7 @@ var kMath = function() {
      * @param {Number} v1
      * @returns {Number}
      */
-    this.lerp = function(x, v0, v1) {
-        return v0 + (v1 - v0) * x;
-    };
+    this.lerp = (x, v0, v1) => v0 + (v1 - v0) * x;
 
 
     /*
@@ -602,9 +565,7 @@ var kMath = function() {
      * @param {Number} v1 The upper clamp threshold
      * @returns {Number} The clamped value
      */
-    this.clamp = function(x, v0, v1) {
-        return x < v0 ? v0 : x > v1 ? v1 : x;
-    };
+    this.clamp = (x, v0, v1) => x < v0 ? v0 : x > v1 ? v1 : x;
 
 
     /*
@@ -631,11 +592,11 @@ var kMath = function() {
      * @param {Boolean} clamp Results if True
      * @returns {Number} The re-mapped value
      */
-    this.map = function(x, v0, v1, vx0, vx1, clamp) {
+    this.map = (x, v0, v1, vx0, vx1, clamp) => {
         if (Math.abs(v0 - v1) < 1e-15) {
             return vx0;
         } else {
-            var _x = ((x - v0) / (v1 - v0) * (vx1 - vx0) + vx0);
+            let _x = ((x - v0) / (v1 - v0) * (vx1 - vx0) + vx0);
             if (clamp) {
                 if (vx1 < vx0) {
                     if (_x < vx1) {
@@ -665,9 +626,7 @@ var kMath = function() {
      * @param {Number} y2
      * @returns {Number}
      */
-    this.dist = function(x1, y1, x2, y2) {
-        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-    };
+    this.dist = (x1, y1, x2, y2) => Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
 
     /*
@@ -681,9 +640,7 @@ var kMath = function() {
      * @param {Number} y2
      * @returns {Number}
      */
-    this.distSquared = function(x1, y1, x2, y2) {
-        return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-    };
+    this.distSquared = (x1, y1, x2, y2) => (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
 
 
     /*
@@ -694,7 +651,7 @@ var kMath = function() {
      * @param {Number} precision
      * @returns {Number}
      */
-    this.randomFloat = function(min, max, precision) {
+    this.randomFloat = (min, max, precision) => {
 
         if (typeof(precision) === 'undefined') {
             precision = 2;
@@ -724,12 +681,12 @@ var kMath = function() {
      */
     this.randomPerm = function(index) {
 
-        var perm = new Float32Array(index);
+        const perm = new Float32Array(index);
 
-        for (var n = index; n >= 0; n -= 1) {
+        for (let n = index; n >= 0; n -= 1) {
 
-            var z = perm[n];
-            var x = this.floor32(Math.random() * (index + 1));
+            const z = perm[n];
+            const x = this.floor32(Math.random() * (index + 1));
 
             perm[n] = perm[x];
             perm[x] = z;
@@ -745,9 +702,7 @@ var kMath = function() {
      * @param {Number} bits
      * @returns {Number}
      */
-    this.bitDivisor = function(bits) {
-        return 1 << (bits - 1);
-    };
+    this.bitDivisor = bits => 1 << (bits - 1);
 
 
     /*
@@ -756,9 +711,7 @@ var kMath = function() {
      * @param {Number} bits
      * @returns {Number}
      */
-    this.bitMask = function(bits) {
-        return (1 << bits) - 1;
-    };
+    this.bitMask = bits => (1 << bits) - 1;
 
 
     /*
@@ -768,9 +721,7 @@ var kMath = function() {
      * @param {Number} bits
      * @returns {Number}
      */
-    this.bitShift = function(x, bits) {
-        return (self.bitMask(bits) & x) / self.bitDivisor(bits);
-    };
+    this.bitShift = (x, bits) => (self.bitMask(bits) & x) / self.bitDivisor(bits);
 
     /*
      * Permutation table
@@ -895,12 +846,12 @@ var kMath = function() {
      * @param {Number} x
      * @returns {Number}
      */
-    this.gradient1d = function(hash, x) {
+    this.gradient1d = (hash, x) => {
 
-        var h = (hash & 15) | 0;
+        const h = (hash & 15) | 0;
 
         // Gradient value 1.0, 2.0, ..., 8.0
-        var grad = 1.0 + (h & 7);
+        let grad = 1.0 + (h & 7);
 
         // Set a random sign for the gradient
         if (h & 8) {
@@ -920,14 +871,14 @@ var kMath = function() {
      * @param {Number} y
      * @returns {Number}
      */
-    this.gradient2d = function(hash, x, y) {
+    this.gradient2d = (hash, x, y) => {
 
         // Convert low 3 bits of hash code into 8 simple
         // gradient directions, and compute dot product
 
-        var h = (hash & 7) | 0;
-        var u = h < 4 ? x : y;
-        var v = h < 4 ? y : x;
+        const h = (hash & 7) | 0;
+        const u = h < 4 ? x : y;
+        const v = h < 4 ? y : x;
 
         return ((h & 1) ? -u : u) + ((h & 2) ? -2.0 * v : 2.0 * v);
     };
@@ -941,14 +892,14 @@ var kMath = function() {
      * @param {Number} z
      * @returns {Number}
      */
-    this.gradient3d = function(hash, x, y, z) {
+    this.gradient3d = (hash, x, y, z) => {
 
         // Convert low 4 bits of hash code into 12 simple
         // gradient directions, and compute dot product.
 
-        var h = (hash & 15) | 0;
-        var u = h < 8 ? x : y;
-        var v = h < 4 ? y : h === 12 || h === 14 ? x : z;
+        const h = (hash & 15) | 0;
+        const u = h < 8 ? x : y;
+        const v = h < 4 ? y : h === 12 || h === 14 ? x : z;
         return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
     };
 
@@ -962,15 +913,15 @@ var kMath = function() {
      * @param {Number} t
      * @returns {Number}
      */
-    this.gradient4d = function(hash, x, y, z, t) {
+    this.gradient4d = (hash, x, y, z, t) => {
 
         // Convert low 5 bits of hash code into 32 simple
         // gradient directions, and compute dot product.
 
-        var h = (hash & 31) | 0;
-        var u = h < 24 ? x : y;
-        var v = h < 16 ? y : z;
-        var w = h < 8 ? z : t;
+        const h = (hash & 31) | 0;
+        const u = h < 24 ? x : y;
+        const v = h < 16 ? y : z;
+        const w = h < 8 ? z : t;
 
         return ((h & 1) ? -u : u) + ((h & 2) ? -v : v) + ((h & 4) ? -w : w);
     };
@@ -981,19 +932,19 @@ var kMath = function() {
      * @param {Number} x
      * @returns {Number}
      */
-    this.signedNoise1d = function(x) {
+    this.signedNoise1d = x => {
 
-        var i0 = self.floor32(x);
-        var i1 = i0 + 1;
+        const i0 = self.floor32(x);
+        const i1 = i0 + 1;
 
-        var x0 = x - i0;
-        var x1 = x0 - 1.0;
+        const x0 = x - i0;
+        const x1 = x0 - 1.0;
 
-        var t1 = 1.0 - x1 * x1;
-        var t0 = 1.0 - x0 * x0;
+        let t1 = 1.0 - x1 * x1;
+        let t0 = 1.0 - x0 * x0;
 
-        var n0 = (t0 *= t0) * t0 * self.gradient1d(self.permutation[i0 & 0xff], x0);
-        var n1 = (t1 *= t1) * t1 * self.gradient1d(self.permutation[i1 & 0xff], x1);
+        const n0 = (t0 *= t0) * t0 * self.gradient1d(self.permutation[i0 & 0xff], x0);
+        const n1 = (t1 *= t1) * t1 * self.gradient1d(self.permutation[i1 & 0xff], x1);
 
         // The maximum value of this noise is 8*(3/4)^4 = 2.53125
         // A factor of 0.395 would scale to fit exactly within [-1,1], but
@@ -1008,18 +959,18 @@ var kMath = function() {
      * @param {Number} y
      * @returns {Number}
      */
-    this.signedNoise2d = function(x, y) {
+    this.signedNoise2d = (x, y) => {
 
         // Skew the input space to determine which simplexLookup cell we're in
-        var i = self.floor32(x + (x + y) * self.F2);
-        var j = self.floor32(y + (x + y) * self.F2);
+        let i = self.floor32(x + (x + y) * self.F2);
+        let j = self.floor32(y + (x + y) * self.F2);
 
         // The x,y distances from the cell origin
-        var x0 = x - i + (i + j) * self.G2;
-        var y0 = y - j + (i + j) * self.G2;
+        const x0 = x - i + (i + j) * self.G2;
+        const y0 = y - j + (i + j) * self.G2;
 
-        var i1 = 0;
-        var j1 = 1;
+        let i1 = 0;
+        let j1 = 1;
 
         // lower triangle, XY order: (0,0)->(1,0)->(1,1)
         if (x0 > y0) {
@@ -1028,23 +979,23 @@ var kMath = function() {
         }
 
         // Offsets for middle corner in (x,y) unskewed coords
-        var x1 = x0 - i1 + self.G2;
-        var y1 = y0 - j1 + self.G2;
+        const x1 = x0 - i1 + self.G2;
+        const y1 = y0 - j1 + self.G2;
 
         // Offsets for last corner in (x,y) unskewed coords
-        var x2 = x0 - self.H2;
-        var y2 = y0 - self.H2;
+        const x2 = x0 - self.H2;
+        const y2 = y0 - self.H2;
 
         i = i % 256;
         j = j % 256;
 
-        var t0 = 0.5 - x0 * x0 - y0 * y0;
-        var t1 = 0.5 - x1 * x1 - y1 * y1;
-        var t2 = 0.5 - x2 * x2 - y2 * y2;
+        const t0 = 0.5 - x0 * x0 - y0 * y0;
+        const t1 = 0.5 - x1 * x1 - y1 * y1;
+        const t2 = 0.5 - x2 * x2 - y2 * y2;
 
-        var n0 = t0 * t0 * t0 * t0 * self.gradient2d(self.permutation[i + self.permutation[j]], x0, y0);
-        var n1 = t1 * t1 * t1 * t1 * self.gradient2d(self.permutation[i + i1 + self.permutation[j + j1]], x1, y1);
-        var n2 = t2 * t2 * t2 * t2 * self.gradient2d(self.permutation[i + 1 + self.permutation[j + 1]], x2, y2);
+        const n0 = t0 * t0 * t0 * t0 * self.gradient2d(self.permutation[i + self.permutation[j]], x0, y0);
+        const n1 = t1 * t1 * t1 * t1 * self.gradient2d(self.permutation[i + i1 + self.permutation[j + j1]], x1, y1);
+        const n2 = t2 * t2 * t2 * t2 * self.gradient2d(self.permutation[i + 1 + self.permutation[j + 1]], x2, y2);
 
         return 40.0 * (n0 + n1 + n2);
     };
@@ -1057,23 +1008,27 @@ var kMath = function() {
      * @param {Number} z
      * @returns {Number}
      */
-    this.signedNoise3d = function(x, y, z) {
-
+    this.signedNoise3d = (x, y, z) => {
         // Skew the input space to determine which simplexLookup cell we're in
-        var s = (x + y + z) * self.F3;
+        const s = (x + y + z) * self.F3;
 
-        var i = self.floor32(x + s);
-        var j = self.floor32(y + s);
-        var k = self.floor32(z + s);
+        const i = self.floor32(x + s);
+        const j = self.floor32(y + s);
+        const k = self.floor32(z + s);
 
-        var t = (i + j + k) * self.G3;
+        const t = (i + j + k) * self.G3;
 
         // The x,y,z distances from the cell origin
-        var x0 = x - (i - t);
-        var y0 = y - (j - t);
-        var z0 = z - (k - t);
+        const x0 = x - (i - t);
+        const y0 = y - (j - t);
+        const z0 = z - (k - t);
 
-        var i1, j1, k1, i2, j2, k2;
+        let i1;
+        let j1;
+        let k1;
+        let i2;
+        let j2;
+        let k2;
 
         if (x0 >= y0) {
             if (y0 >= z0) {
@@ -1128,30 +1083,30 @@ var kMath = function() {
         }
 
         // Offsets for second corner in (x,y,z) coords
-        var x1 = x0 - i1 + self.G3;
-        var y1 = y0 - j1 + self.G3;
-        var z1 = z0 - k1 + self.G3;
+        const x1 = x0 - i1 + self.G3;
+        const y1 = y0 - j1 + self.G3;
+        const z1 = z0 - k1 + self.G3;
 
         // Offsets for third corner in (x,y,z) coords
-        var x2 = x0 - i2 + self.F3;
-        var y2 = y0 - j2 + self.F3;
-        var z2 = z0 - k2 + self.F3;
+        const x2 = x0 - i2 + self.F3;
+        const y2 = y0 - j2 + self.F3;
+        const z2 = z0 - k2 + self.F3;
 
         // Offsets for last corner in (x,y,z) coords
-        var x3 = x0 - 0.5;
-        var y3 = y0 - 0.5;
-        var z3 = z0 - 0.5;
+        const x3 = x0 - 0.5;
+        const y3 = y0 - 0.5;
+        const z3 = z0 - 0.5;
 
         // Calculate the contribution from the four corners
-        var t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
-        var t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
-        var t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
-        var t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
+        let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
+        let t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
+        let t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
+        let t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
 
-        var n0 = t0 < 0.0 ? 0.0 : (t0 *= t0) * t0 * self.gradient3d(self.permMod12[i + self.permutation[j + self.permutation[k]]], x0, y0, z0);
-        var n1 = t1 < 0.0 ? 0.0 : (t1 *= t1) * t1 * self.gradient3d(self.permMod12[i + i1 + self.permutation[j + j1 + self.permutation[k + k1]]], x1, y1, z1);
-        var n2 = t2 < 0.0 ? 0.0 : (t2 *= t2) * t2 * self.gradient3d(self.permMod12[i + i2 + self.permutation[j + j2 + self.permutation[k + k2]]], x2, y2, z2);
-        var n3 = t3 < 0.0 ? 0.0 : (t3 *= t3) * t3 * self.gradient3d(self.permMod12[i + 1 + self.permutation[j + 1 + self.permutation[k + 1]]], x3, y3, z3);
+        const n0 = t0 < 0.0 ? 0.0 : (t0 *= t0) * t0 * self.gradient3d(self.permMod12[i + self.permutation[j + self.permutation[k]]], x0, y0, z0);
+        const n1 = t1 < 0.0 ? 0.0 : (t1 *= t1) * t1 * self.gradient3d(self.permMod12[i + i1 + self.permutation[j + j1 + self.permutation[k + k1]]], x1, y1, z1);
+        const n2 = t2 < 0.0 ? 0.0 : (t2 *= t2) * t2 * self.gradient3d(self.permMod12[i + i2 + self.permutation[j + j2 + self.permutation[k + k2]]], x2, y2, z2);
+        const n3 = t3 < 0.0 ? 0.0 : (t3 *= t3) * t3 * self.gradient3d(self.permMod12[i + 1 + self.permutation[j + 1 + self.permutation[k + 1]]], x3, y3, z3);
 
         return 32.0 * (n0 + n1 + n2 + n3);
     };
@@ -1165,31 +1120,35 @@ var kMath = function() {
      * @param {Number} w
      * @returns {Number}
      */
-    this.signedNoise4d = function(x, y, z, w) {
-
-        var n0, n1, n2, n3, n4; /* Noise contributions from the five corners */
+    this.signedNoise4d = (x, y, z, w) => {
+        let n0;
+        let n1;
+        let n2;
+        let n3;
+        let n4;
+        /* Noise contributions from the five corners */
 
         /* Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in */
-        var s = (x + y + z + w) * self.F4; /* Factor for 4D skewing */
-        var xs = x + s;
-        var ys = y + s;
-        var zs = z + s;
-        var ws = w + s;
-        var i = self.floor32(xs);
-        var j = self.floor32(ys);
-        var k = self.floor32(zs);
-        var l = self.floor32(ws);
+        const s = (x + y + z + w) * self.F4;/* Factor for 4D skewing */
+        const xs = x + s;
+        const ys = y + s;
+        const zs = z + s;
+        const ws = w + s;
+        let i = self.floor32(xs);
+        let j = self.floor32(ys);
+        let k = self.floor32(zs);
+        const l = self.floor32(ws);
 
-        var t = (i + j + k + l) * self.G4; /* Factor for 4D unskewing */
-        var X0 = i - t; /* Unskew the cell origin back to (x,y,z,w) space */
-        var Y0 = j - t;
-        var Z0 = k - t;
-        var W0 = l - t;
+        const t = (i + j + k + l) * self.G4;/* Factor for 4D unskewing */
+        const X0 = i - t;/* Unskew the cell origin back to (x,y,z,w) space */
+        const Y0 = j - t;
+        const Z0 = k - t;
+        const W0 = l - t;
 
-        var x0 = x - X0; /* The x,y,z,w distances from the cell origin */
-        var y0 = y - Y0;
-        var z0 = z - Z0;
-        var w0 = w - W0;
+        const x0 = x - X0;/* The x,y,z,w distances from the cell origin */
+        const y0 = y - Y0;
+        const z0 = z - Z0;
+        const w0 = w - W0;
 
         /* For the 4D case, the simplexLookup is a 4D shape I won't even try to describe. */
         /* To find out which of the 24 possible simplices we're in, we need to */
@@ -1199,20 +1158,58 @@ var kMath = function() {
         /* First, six pair-wise comparisons are performed between each possible pair */
         /* of the four coordinates, and the results are used to add up binary bits */
         /* for an integer index. */
-        var c1 = self.int((x0 > y0) ? 32 : 0);
-        var c2 = self.int((x0 > z0) ? 16 : 0);
-        var c3 = self.int((y0 > z0) ? 8 : 0);
-        var c4 = self.int((x0 > w0) ? 4 : 0);
-        var c5 = self.int((y0 > w0) ? 2 : 0);
-        var c6 = self.int((z0 > w0) ? 1 : 0);
-        var c = c1 + c2 + c3 + c4 + c5 + c6;
+        const c1 = self.int((x0 > y0) ? 32 : 0);
+        const c2 = self.int((x0 > z0) ? 16 : 0);
+        const c3 = self.int((y0 > z0) ? 8 : 0);
+        const c4 = self.int((x0 > w0) ? 4 : 0);
+        const c5 = self.int((y0 > w0) ? 2 : 0);
+        const c6 = self.int((z0 > w0) ? 1 : 0);
+        const c = c1 + c2 + c3 + c4 + c5 + c6;
 
-        var i1, j1, k1, l1; /* The integer offsets for the second simplexLookup corner */
-        var i2, j2, k2, l2; /* The integer offsets for the third simplexLookup corner */
-        var i3, j3, k3, l3; /* The integer offsets for the fourth simplexLookup corner */
+        let i1;
+        let j1;
+        let k1;
+        let l1;
 
-        var x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3, x4, y4, z4, w4, ll;
-        var t0, t1, t2, t3, t4;
+        /* The integer offsets for the second simplexLookup corner */
+        let i2;
+
+        let j2;
+        let k2;
+        let l2;
+
+        /* The integer offsets for the third simplexLookup corner */
+        let i3;
+
+        let j3;
+        let k3;
+        let l3;
+
+        /* The integer offsets for the fourth simplexLookup corner */
+
+        let x1;
+
+        let y1;
+        let z1;
+        let w1;
+        let x2;
+        let y2;
+        let z2;
+        let w2;
+        let x3;
+        let y3;
+        let z3;
+        let w3;
+        let x4;
+        let y4;
+        let z4;
+        let w4;
+        let ll;
+        let t0;
+        let t1;
+        let t2;
+        let t3;
+        let t4;
 
         /* simplexLookup[c] is a 4-vector with the numbers 0, 1, 2 and 3 in some order. */
         /* Many values of c will never occur, since e.g. x>y>z>w makes x<z, y<w and x<w */
@@ -1234,19 +1231,19 @@ var kMath = function() {
         l3 = self.simplexLookup[c][3] >= 1 ? 1 : 0;
         /* The fifth corner has all coordinate offsets = 1, so no need to look that up. */
 
-        x1 = x0 - i1 + self.G4; /* Offsets for second corner in (x,y,z,w) coords */
+        x1 = x0 - i1 + self.G4;/* Offsets for second corner in (x,y,z,w) coords */
         y1 = y0 - j1 + self.G4;
         z1 = z0 - k1 + self.G4;
         w1 = w0 - l1 + self.G4;
-        x2 = x0 - i2 + 2.0 * self.G4; /* Offsets for third corner in (x,y,z,w) coords */
+        x2 = x0 - i2 + 2.0 * self.G4;/* Offsets for third corner in (x,y,z,w) coords */
         y2 = y0 - j2 + 2.0 * self.G4;
         z2 = z0 - k2 + 2.0 * self.G4;
         w2 = w0 - l2 + 2.0 * self.G4;
-        x3 = x0 - i3 + 3.0 * self.G4; /* Offsets for fourth corner in (x,y,z,w) coords */
+        x3 = x0 - i3 + 3.0 * self.G4;/* Offsets for fourth corner in (x,y,z,w) coords */
         y3 = y0 - j3 + 3.0 * self.G4;
         z3 = z0 - k3 + 3.0 * self.G4;
         w3 = w0 - l3 + 3.0 * self.G4;
-        x4 = x0 - 1.0 + 4.0 * self.G4; /* Offsets for last corner in (x,y,z,w) coords */
+        x4 = x0 - 1.0 + 4.0 * self.G4;/* Offsets for last corner in (x,y,z,w) coords */
         y4 = y0 - 1.0 + 4.0 * self.G4;
         z4 = z0 - 1.0 + 4.0 * self.G4;
         w4 = w0 - 1.0 + 4.0 * self.G4;
@@ -1308,9 +1305,7 @@ var kMath = function() {
      * @param {Number} x
      * @returns {Number}
      */
-    this.simplexNoise1d = function(x) {
-        return self.signedNoise1d(x) * 0.5 + 0.5;
-    };
+    this.simplexNoise1d = x => self.signedNoise1d(x) * 0.5 + 0.5;
 
     /*
      * 2d ofSimplex Noise
@@ -1319,9 +1314,7 @@ var kMath = function() {
      * @param {Number} y
      * @returns {Number}
      */
-    this.simplexNoise2d = function(x, y) {
-        return self.signedNoise2d(x, y) * 0.5 + 0.5;
-    };
+    this.simplexNoise2d = (x, y) => self.signedNoise2d(x, y) * 0.5 + 0.5;
 
     /*
      * 3d ofSimplex Noise
@@ -1331,9 +1324,7 @@ var kMath = function() {
      * @param {Number} z
      * @returns {Number}
      */
-    this.simplexNoise3d = function(x, y, z) {
-        return self.signedNoise3d(x, y, z) * 0.5 + 0.5;
-    };
+    this.simplexNoise3d = (x, y, z) => self.signedNoise3d(x, y, z) * 0.5 + 0.5;
 
     /*
      * 4d ofSimplex Noise
@@ -1344,7 +1335,5 @@ var kMath = function() {
      * @param {Number} w
      * @returns {Number}
      */
-    this.simplexNoise4d = function(x, y, z, w) {
-        return self.signedNoise4d(x, y, z, w) * 0.5 + 0.5;
-    };
+    this.simplexNoise4d = (x, y, z, w) => self.signedNoise4d(x, y, z, w) * 0.5 + 0.5;
 };

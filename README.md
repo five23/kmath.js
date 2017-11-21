@@ -32,7 +32,7 @@ Returns a numeric value between ~~-1 and ~~1, representing the sine of the angle
 			x = x * x >> 12, b = 19900 - (3516 * x >> 14), b = 4096 - (x * b >> 16),
 			0 > c && (b = -b), 2.44E-4 * b;
 	};
-    
+
 Based on the methods discussed here: http://www.coranac.com/2009/07/sines
 
 Performance tests: http://jsperf.com/bitwise-sine/3﻿
@@ -292,4 +292,3 @@ simplexNoise3d(x, y, z)
 
 simplexNoise4d(x, y, z, w)
 --------------------------
-
