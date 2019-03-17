@@ -24,16 +24,16 @@ Do some math
 
 fsin(x)
 -------
-Returns a numeric value between ~~-1 and ~~1, representing the sine of the angle given in radians. The scaling factors (5214, 2.44E-4) were chosen arbitrarily and in haste, then truncated to squeeze a few more clock cycles out of the function, so the precision is only accurate to ~5 decimal places on the arc. ﻿ :
+R̶e̶t̶u̶r̶n̶s̶ ̶a̶ ̶n̶u̶m̶e̶r̶i̶c̶ ̶v̶a̶l̶u̶e̶ ̶b̶e̶t̶w̶e̶e̶n̶ ̶~̶~̶-̶1̶ ̶a̶n̶d̶ ̶~̶~̶1̶,̶ ̶r̶e̶p̶r̶e̶s̶e̶n̶t̶i̶n̶g̶ ̶t̶h̶e̶ ̶s̶i̶n̶e̶ ̶o̶f̶ ̶t̶h̶e̶ ̶a̶n̶g̶l̶e̶ ̶g̶i̶v̶e̶n̶ ̶i̶n̶ ̶r̶a̶d̶i̶a̶n̶s̶.̶ ̶T̶h̶e̶ ̶s̶c̶a̶l̶i̶n̶g̶ ̶f̶a̶c̶t̶o̶r̶s̶ ̶(̶5̶2̶1̶4̶,̶ ̶2̶.̶4̶4̶E̶-̶4̶)̶ ̶w̶e̶r̶e̶ ̶c̶h̶o̶s̶e̶n̶ ̶a̶r̶b̶i̶t̶r̶a̶r̶i̶l̶y̶ ̶a̶n̶d̶ ̶i̶n̶ ̶h̶a̶s̶t̶e̶,̶ ̶t̶h̶e̶n̶ ̶t̶r̶u̶n̶c̶a̶t̶e̶d̶ ̶t̶o̶ ̶s̶q̶u̶e̶e̶z̶e̶ ̶a̶ ̶f̶e̶w̶ ̶m̶o̶r̶e̶ ̶c̶l̶o̶c̶k̶ ̶c̶y̶c̶l̶e̶s̶ ̶o̶u̶t̶ ̶o̶f̶ ̶t̶h̶e̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶,̶ ̶s̶o̶ ̶t̶h̶e̶ ̶p̶r̶e̶c̶i̶s̶i̶o̶n̶ ̶i̶s̶ ̶o̶n̶l̶y̶ ̶a̶c̶c̶u̶r̶a̶t̶e̶ ̶t̶o̶ ̶~̶5̶ ̶d̶e̶c̶i̶m̶a̶l̶ ̶p̶l̶a̶c̶e̶s̶ ̶o̶n̶ ̶t̶h̶e̶ ̶a̶r̶c̶.̶ ̶﻿̶ ̶:̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶}̶;̶ ̶ ̶B̶a̶s̶e̶d̶ ̶o̶n̶ ̶t̶h̶e̶ ̶m̶e̶t̶h̶o̶d̶s̶ ̶d̶i̶s̶c̶u̶s̶s̶e̶d̶ ̶h̶e̶r̶e̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶w̶w̶w̶.̶c̶o̶r̶a̶n̶a̶c̶.̶c̶o̶m̶/̶2̶0̶0̶9̶/̶0̶7̶/̶s̶i̶n̶e̶s̶ ̶ ̶P̶e̶r̶f̶o̶r̶m̶a̶n̶c̶e̶ ̶t̶e̶s̶t̶s̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶j̶s̶p̶e̶r̶f̶.̶c̶o̶m̶/̶b̶i̶t̶w̶i̶s̶e̶-̶s̶i̶n̶e̶/̶3̶﻿̶
 
-	this.fsin = function (x) {
-		var b, c;
-		return x *= 5214, c = x << 17, x -= 8192, x <<= 18, x >>= 18,
-			x = x * x >> 12, b = 19900 - (3516 * x >> 14), b = 4096 - (x * b >> 16),
-			0 > c && (b = -b), 2.44E-4 * b;
-	};
+	t̶h̶i̶s̶.̶f̶s̶i̶n̶ ̶=̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶ ̶(̶x̶)̶ ̶{̶
+		v̶a̶r̶ ̶b̶,̶ ̶c̶;̶
+	  r̶e̶t̶u̶r̶n̶ ̶x̶ ̶*̶=̶ ̶5̶2̶1̶4̶,̶ ̶c̶ ̶=̶ ̶x̶ ̶<̶<̶ ̶1̶7̶,̶ ̶x̶ ̶-̶=̶ ̶8̶1̶9̶2̶,̶ ̶x̶ ̶<̶<̶=̶ ̶1̶8̶,̶ ̶x̶ ̶>̶>̶=̶ ̶1̶8̶,̶ ̶ ̶ ̶ ̶x̶ ̶=̶ ̶x̶ ̶*̶ ̶x̶ ̶>̶>̶ ̶1̶2̶,̶ ̶b̶ ̶=̶ ̶1̶9̶9̶0̶0̶ ̶-̶ ̶(̶3̶5̶1̶6̶ ̶*̶ ̶x̶ ̶>̶>̶ ̶1̶4̶)̶,̶ ̶b̶ ̶=̶ ̶4̶0̶9̶6̶ ̶-̶ ̶(̶x̶ ̶*̶ ̶b̶ ̶>̶>̶ ̶1̶6̶)̶,̶ ̶ ̶ ̶ ̶0̶ ̶>̶ ̶c̶ ̶&̶&̶ ̶(̶b̶ ̶=̶ ̶-̶b̶)̶,̶ ̶2̶.̶4̶4̶E̶-̶4̶ ̶*̶ ̶b̶;̶
+	}̶;̶
 
-Based on the methods discussed here: http://www.coranac.com/2009/07/sines
+B̶a̶s̶e̶d̶ ̶o̶n̶ ̶t̶h̶e̶ ̶m̶e̶t̶h̶o̶d̶s̶ ̶d̶i̶s̶c̶u̶s̶s̶e̶d̶ ̶h̶e̶r̶e̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶w̶w̶w̶.̶c̶o̶r̶a̶n̶a̶c̶.̶c̶o̶m̶/̶2̶0̶0̶9̶/̶0̶7̶/̶s̶i̶n̶e̶s̶
+
+Browsers have become significantly more optimized and this method is no longer fastest.
 
 Performance tests: http://jsperf.com/bitwise-sine/3﻿
 
