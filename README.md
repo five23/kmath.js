@@ -5,7 +5,7 @@
 
 Import
 
-    import { kMath } from "./kmath";
+    import { kMath } from "./js/kmath";
 
 Instantiate
 
