@@ -24,6 +24,66 @@ export function kMath() {
     /* abs(ζ(1 - floor(2 k))) */
     this.B2 = [1/12, 1/120, 1/252, 1/240, 1/132, 691/32760, 1/12, 3617/8160, 43867/14364, 174611/6600, 77683/276, 236364091/65520, 657931/12];
 
+    this.GAMMAINT = [
+        0, 
+        1, 
+        3/2, 
+        11/6, 
+        25/12, 
+        137/60, 
+        49/20, 
+        363/140, 
+        761/280, 
+        7129/2520, 
+        7381/2520, 
+        83711/27720
+    ];
+
+    this.GAMMAINT_TEST_VALUES = [ 
+        -0.5772156649015329, 
+        0.42278433509846713, 
+        0.9227843350984671, 
+        1.2561176684318003, 
+        1.5061176684318007, 
+        1.7061176684318005, 
+        1.8727843350984674, 
+        2.01564147795561,  
+        2.14064147795561, 
+        2.2517525890667214, 
+        2.351752589066721, 
+        2.4426616799758123 
+    ];
+
+    this.GAMMAHALFINT = [
+        0,
+        2,
+        46/15,
+        352/105,
+        1126/315,
+        13016/3465,
+        176138/45045,
+        182144/45045,
+        3186538/765765,
+        62075752/14549535,
+        63461422/14549535,
+        1488711776/334639305
+    ];
+
+    this.GAMMAHALFINT_TEST_VALUES = [ 
+        -1.9635100260214235, 
+        0.03648997397857652, 
+        0.7031566406452432, 
+        1.103156640645243, 
+        1.388870926359529, 
+        1.611093148581751, 
+        1.792911330399933, 
+        1.9467574842460866, 
+        2.08009081757942, 
+        2.1977378764029494, 
+        2.303001034297686, 
+        2.398239129535781
+    ];
+
     /*
      * csc
      *
@@ -236,6 +296,18 @@ export function kMath() {
 
 
     /*
+     * Square Wave Approximation
+     *
+     * @param {Number} x
+     * @param {Number} m Partials
+     * @returns {x}
+     */
+    this.square12 = (a, b) => {
+        return 0.5 * (Math.cos(self.TAU * b * Math.cos(a)) * ((self.digamma12(0.75 - b * Math.cos(a)) - self.digamma12(0.25 - b * Math.cos(a))) / Math.PI) - 1);
+    };
+
+
+    /*
      * Factorial
      *
      * @param {Number} x
@@ -371,14 +443,19 @@ export function kMath() {
    };
    
 
+   
     /*
      * Precision Digamma Function
      *
      * @param {Number} x
      * @returns {x}
      */
-   this.digamma12 = (x) => {
-    var PRECISION = 12;
+   this.digamma12 = (x, PRECISION) => {
+
+    // Defaults to 12, est. max ~32678*12
+    if (!PRECISION) {
+        PRECISION = 12;
+    }
     var v = 0;
     
     /* If the absolute value of x is less than epsilon we assume zero */
@@ -391,13 +468,13 @@ export function kMath() {
     if (Number.isInteger(x) && x < 0) {
       return Infinity;
     }
-    /* Special values (1) */
-    if (x === 1) {
-      return -self.GAMMA;
+    /* Special values at positive integers (table lookup) */
+    if (Number.isInteger(x) && x < 12) {
+        return self.GAMMAINT[x-1] - self.GAMMA;
     }
-    /* Special values (1/2) */
-    if (x === 1/2) {
-      return -self.GAMMA - self.TWOLN2;
+    /* Special values at positive half-integers (table lookup) */
+    if (Number.isInteger(x-1/2) && x < 25/2) {
+        return self.GAMMAHALFINT[x-1/2] - self.GAMMA - self.TWOLN2;
     }
     /* Small values (0.000001) */
     if (Math.abs(x) <= 1e-6) {
