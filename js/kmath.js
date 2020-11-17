@@ -353,7 +353,6 @@ export function kMath() {
      * @param {Number} x
      * @returns {x}
      */
-     // Input 0
    this.digamma = b => {
      let c = 0;
      if (0 >= b && b === Math.round(b)) {
@@ -372,6 +371,12 @@ export function kMath() {
    };
    
 
+    /*
+     * Precision Digamma Function
+     *
+     * @param {Number} x
+     * @returns {x}
+     */
    this.digamma12 = (x) => {
     var PRECISION = 12;
     var v = 0;
@@ -388,21 +393,21 @@ export function kMath() {
     }
     /* Special values (1) */
     if (x === 1) {
-      return -K.GAMMA;
+      return -self.GAMMA;
     }
     /* Special values (1/2) */
     if (x === 1/2) {
-      return -K.GAMMA - K.TWOLN2;
+      return -self.GAMMA - self.TWOLN2;
     }
     /* Small values (0.000001) */
     if (Math.abs(x) <= 1e-6) {
       /* Positive x */
       if (x > 0) {
-          return K.GAMMA - 1 / x + K.ZETA2;
+          return self.GAMMA - 1 / x + self.ZETA2;
       }
       /* Negative x */
       if (x < 0) {
-          return digamma(1 - x) + K.PI / Math.tan(-K.PI * x);
+          return digamma(1 - x) + self.PI / Math.tan(-self.PI * x);
       }
     }
   
@@ -413,16 +418,16 @@ export function kMath() {
     return (v +=
       Math.log(x) -
       0.5 / (x *= x) -
-      (B2[0] -
-        (B2[1] -
-          (B2[2] -
-            (B2[3] -
-              (B2[4] -
-                (B2[5] -
-                  (B2[6] -
-                    (B2[7] -
-                      (B2[8] -
-                        (B2[9] - (B2[10] - (B2[11] - B2[12] / x) / x) / x) / x) /
+      (self.B2[0] -
+        (self.B2[1] -
+          (self.B2[2] -
+            (self.B2[3] -
+              (self.B2[4] -
+                (self.B2[5] -
+                  (self.B2[6] -
+                    (self.B2[7] -
+                      (self.B2[8] -
+                        (self.B2[9] - (self.B2[10] - (self.B2[11] - self.B2[12] / x) / x) / x) / x) /
                         x) /
                       x) /
                     x) /
