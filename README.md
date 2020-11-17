@@ -3,21 +3,17 @@
 ## Usage
 
 
-Include kmath.js
+Import
 
-	<script type="text/javascript" src="kmath.js"></script>
+    import { kMath } from "./kmath";
 
+Instantiate
 
-Instantiate kMath object
-
-	var kmath = new kMath();
-
+	var K = new kMath();
 
 Do some math
 
-	var y = kmath.lngamma(1);  // 3.1780538303479458
-
-
+	var y = K.digamma12(1); // -0.5772156649015329
 
 ## Methods
 

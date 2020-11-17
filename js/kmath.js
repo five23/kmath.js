@@ -449,6 +449,14 @@ export function kMath() {
 
 
     /*
+     * Precision Harmonic Number
+     *
+     * @param {Number} x
+     * @returns {x}
+     */
+    this.H12 = x => self.digamma12(++x) + self.GAMMA;
+
+    /*
      * Phi Distribution
      *
      * @param {Number} x
