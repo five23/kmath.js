@@ -1,4 +1,4 @@
-const kMath = function() {
+export function kMath() {
 
     const self = this;
 
@@ -19,6 +19,7 @@ const kMath = function() {
     this.G3 = 0.16666666666666666666666666666667; // @constant {Number} 1/6
     this.G4 = 0.13819660112501051517954131656344; // @constant {Number} 1/(5 + sqrt(5))
     this.H2 = 0.57735026918962576450914878050196; // @constant {Number} 1/(sqrt(3))
+    this.TWOLN2 = 1.3862943611198906188344642429164; /* @constant {Number} 2*ln(2) */
 
 
     /*
