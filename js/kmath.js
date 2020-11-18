@@ -484,7 +484,7 @@ export function kMath() {
       }
       /* Negative x */
       if (x < 0) {
-          return digamma(1 - x) + self.PI / Math.tan(-self.PI * x);
+          return self.digamma12(1 - x) + self.PI / Math.tan(-self.PI * x);
       }
     }
   
