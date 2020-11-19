@@ -1,3 +1,8 @@
+/**
+ * kMath
+ *
+ * @export
+ */
 export function kMath() {
 
     const self = this;
@@ -5,7 +10,7 @@ export function kMath() {
     this.EPSILON = 2.2204460492503130808472633361816E-16;
 
     this.PHI = 1.61803398874989484820458683436564; // @constant {Number} (1+sqrt(5))/2
-    this.TAU = 6.28318530717958647692528676655901; // @constant {Number} 2*pi
+    this.TAU = 6.28318530717958647692528676655901; // @constant {Number} 2 pi
     this.PI2 = 1.57079632679489661923132169163975; // @constant {Number} pi/2
     this.GAMMA = 0.57721566490153286060651209008240; // @constant {Number} lim_(n->infty)(H_n-lnn)
     this.ZETA2 = 1.64493406684822643647241516664603; // @constant {Number} zeta(2)
@@ -19,10 +24,90 @@ export function kMath() {
     this.G3 = 0.16666666666666666666666666666667; // @constant {Number} 1/6
     this.G4 = 0.13819660112501051517954131656344; // @constant {Number} 1/(5 + sqrt(5))
     this.H2 = 0.57735026918962576450914878050196; // @constant {Number} 1/(sqrt(3))
-    this.TWOLN2 = 1.3862943611198906188344642429164; /* @constant {Number} 2*ln(2) */
+    this.TWOLN2 = 1.3862943611198906188344642429164; // @constant {Number} 2 ln(2)
 
-    /* abs(ζ(1 - floor(2 k))) */
-    this.B2 = [1/12, 1/120, 1/252, 1/240, 1/132, 691/32760, 1/12, 3617/8160, 43867/14364, 174611/6600, 77683/276, 236364091/65520, 657931/12];
+    // @constant {Array} abs(ζ(1 - floor(2 k)))
+    this.B2 = [
+        1/12, 
+        1/120, 
+        1/252, 
+        1/240, 
+        1/132, 
+        691/32760, 
+        1/12, 
+        3617/8160, 
+        43867/14364, 
+        174611/6600, 
+        77683/276, 
+        236364091/65520, 
+        657931/12
+    ];
+
+    // @constant {Array} Numerators of harmonic numbers H(n) = Sum_{i=1..n} 1/i.
+    this.HN0 = [
+        1, 
+        3, 
+        11, 
+        25, 
+        137, 
+        49, 
+        363, 
+        761, 
+        7129, 
+        7381, 
+        83711, 
+        86021, 
+        1145993, 
+        1171733, 
+        1195757, 
+        2436559, 
+        42142223, 
+        14274301, 
+        275295799, 
+        55835135, 
+        18858053, 
+        19093197, 
+        444316699, 
+        1347822955,
+        34052522467, 
+        34395742267, 
+        312536252003, 
+        315404588903, 
+        9227046511387
+    ]
+    
+    // @constant {Array} Denominators of harmonic numbers H(n) = Sum_{i=1..n} 1/i  
+    this.HN1 = [
+        1, 
+        2, 
+        6, 
+        12, 
+        60,
+        20, 
+        140, 
+        280, 
+        2520, 
+        2520, 
+        27720, 
+        27720, 
+        360360, 
+        360360, 
+        360360, 
+        720720, 
+        12252240, 
+        4084080, 
+        77597520, 
+        15519504, 
+        5173168, 
+        5173168, 
+        118982864, 
+        356948592, 
+        8923714800, 
+        8923714800, 
+        80313433200, 
+        80313433200, 
+        2329089562800
+    ]
 
     this.GAMMAINT = [
         0, 
@@ -84,6 +169,24 @@ export function kMath() {
         2.398239129535781
     ];
 
+    
+    /**
+     * Get OEIS sequence by ID
+     *
+     * @param {*} id
+     * @returns {Mixed} data if sequence is found, false otherwise
+     */
+    this.getSequenceById = async (id) => {
+        const proxyurl = "https://cors-anywhere.herokuapp.com/"; // TODO: register @ OEIS
+        const url = `https://oeis.org/search?q=id:${id}&fmt=json`;
+        const response = await fetch(proxyurl + url);
+        const json = await response.json();
+        if (json.results.length) {
+            return json.results[0];
+        }
+        return false;
+    }
+    
     /*
      * csc
      *
