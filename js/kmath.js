@@ -174,7 +174,7 @@ export function kMath() {
      * Get OEIS sequence by ID
      *
      * @param {*} id
-     * @returns {Mixed} data if sequence is found, false otherwise
+     * @returns {Array} of integers if sequence is found, false otherwise
      */
     this.getSequenceById = async (id) => {
         const proxyurl = "https://cors-anywhere.herokuapp.com/"; // TODO: register @ OEIS
@@ -182,7 +182,10 @@ export function kMath() {
         const response = await fetch(proxyurl + url);
         const json = await response.json();
         if (json.results.length) {
-            return json.results[0];
+            const results = json.results[0]; // Grab first sequence
+            const data = results.data; // Get sequence data
+            const array = data.split(","); // Explode
+            return array.map(el => parseInt(el)); // Return array of integers
         }
         return false;
     }
