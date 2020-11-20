@@ -588,11 +588,11 @@ export function kMath() {
     }
     /* Special values at positive integers (table lookup) */
     if (Number.isInteger(x) && x < 12) {
-        return self.GAMMAINT[Math.floor(x-1)] - self.GAMMA;
+        return self.GAMMAINT[x-1] - self.GAMMA;
     }
     /* Special values at positive half-integers (table lookup) */
     if (Number.isInteger(x-1/2) && x < 25/2) {
-        return self.GAMMAHALFINT[Math.floor(x-1/2)] - self.GAMMA - self.TWOLN2;
+        return self.GAMMAHALFINT[x-1/2] - self.GAMMA - self.TWOLN2;
     }
     /* Small values (0.000001) */
     if (Math.abs(x) <= 1e-6) {
