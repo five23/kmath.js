@@ -7,6 +7,8 @@ export function kMath() {
 
     const self = this;
 
+    // Floating point constants (use with caution!)
+
     this.EPSILON = 2.2204460492503130808472633361816E-16;
 
     this.PHI = 1.61803398874989484820458683436564; // @constant {Number} (1+sqrt(5))/2
@@ -25,6 +27,38 @@ export function kMath() {
     this.G4 = 0.13819660112501051517954131656344; // @constant {Number} 1/(5 + sqrt(5))
     this.H2 = 0.57735026918962576450914878050196; // @constant {Number} 1/(sqrt(3))
     this.TWOLN2 = 1.3862943611198906188344642429164; // @constant {Number} 2 ln(2)
+
+    
+    /**
+     * Get OEIS sequence by ID
+     *
+     * @param {*} id
+     * @returns {Array} of integers if sequence is found, false otherwise
+     */
+    this.getSequenceById = async (id) => {
+        const proxyurl = "https://cors-anywhere.herokuapp.com/"; // TODO: register @ OEIS
+        const url = `https://oeis.org/search?q=id:${id}&fmt=json`;
+        const response = await fetch(proxyurl + url);
+        const json = await response.json();
+        if (json.results.length) {
+            const results = json.results[0]; // Grab first sequence
+            const data = results.data; // Get sequence data
+            const array = data.split(","); // Explode
+            return array.map(el => parseInt(el)); // Return array of integers
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Map an array of numerators to an array of denominators
+     *
+     * @param {Array} numerators
+     * @param {Array} denominators
+     * @returns {Array} of integers
+     */
+    this.mapNandD = (numerators, denominators) => numerators.map((numerator, i) => denominators[i]/numerator);
+
 
     // @constant {Array} abs(ζ(1 - floor(2 k)))
     this.B2 = [
@@ -169,27 +203,7 @@ export function kMath() {
         2.398239129535781
     ];
 
-    
-    /**
-     * Get OEIS sequence by ID
-     *
-     * @param {*} id
-     * @returns {Array} of integers if sequence is found, false otherwise
-     */
-    this.getSequenceById = async (id) => {
-        const proxyurl = "https://cors-anywhere.herokuapp.com/"; // TODO: register @ OEIS
-        const url = `https://oeis.org/search?q=id:${id}&fmt=json`;
-        const response = await fetch(proxyurl + url);
-        const json = await response.json();
-        if (json.results.length) {
-            const results = json.results[0]; // Grab first sequence
-            const data = results.data; // Get sequence data
-            const array = data.split(","); // Explode
-            return array.map(el => parseInt(el)); // Return array of integers
-        }
-        return false;
-    }
-    
+
     /*
      * csc
      *
@@ -395,8 +409,6 @@ export function kMath() {
      * @returns {x}
      */
      this.square = (a, b) => {
-       b *= self.TAU;
-       a = 440 * a * self.TAU / 48000;
        return 0.5 * (Math.cos(self.TAU * b * Math.cos(a)) * ((self.digamma(0.75 - b * Math.cos(a)) - self.digamma(0.25 - b * Math.cos(a))) / Math.PI) - 1);
      };
 
@@ -576,11 +588,11 @@ export function kMath() {
     }
     /* Special values at positive integers (table lookup) */
     if (Number.isInteger(x) && x < 12) {
-        return self.GAMMAINT[x-1] - self.GAMMA;
+        return self.GAMMAINT[Math.floor(x-1)] - self.GAMMA;
     }
     /* Special values at positive half-integers (table lookup) */
     if (Number.isInteger(x-1/2) && x < 25/2) {
-        return self.GAMMAHALFINT[x-1/2] - self.GAMMA - self.TWOLN2;
+        return self.GAMMAHALFINT[Math.floor(x-1/2)] - self.GAMMA - self.TWOLN2;
     }
     /* Small values (0.000001) */
     if (Math.abs(x) <= 1e-6) {
@@ -590,7 +602,7 @@ export function kMath() {
       }
       /* Negative x */
       if (x < 0) {
-          return self.digamma12(1 - x) + self.PI / Math.tan(-self.PI * x);
+          return self.digamma12(1 - x) + Math.PI / Math.tan(-Math.PI * x);
       }
     }
   
