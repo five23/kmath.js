@@ -1,13 +1,13 @@
 # kmath.js — fast JS digamma implementation
 
-**kMath** is a small ES-module with practical, fast implementations for:
+**kmath** is a small ES-module with practical, fast implementations for:
 
 * ψ(x) (digamma): `digamma`, `digamma12` (high-precision), and speed-oriented `digammaFast`, `digammaUltra`
 * Harmonic numbers: `H`, `H12`
 * A digamma-based square waveshaper: `square`, `square12`
 * Handy constants: `TAU`, `HALF_PI`, `EULER_GAMMA`, `ZETA2`, `TWO_LN2`, `SQRT_2PI`
 
-Designed for **speed in hot paths** with **numerical behavior you can reason about**, and sensible defaults for the real line (∞ at the poles 0, −1, −2, …; no exceptions thrown from kMath).
+Designed for **speed in hot paths** with **numerical behavior you can reason about**, and sensible defaults for the real line (∞ at the poles 0, −1, −2, …; no exceptions thrown from kmath).
 
 ---
 
@@ -18,7 +18,7 @@ Most JS digamma implementations either:
 * chase peak accuracy everywhere (and pay in speed), or
 * go fast but **fall apart near reflection / tiny |x|**.
 
-kMath’s ψ variants are **explicit about trade-offs**:
+kmath’s ψ variants are **explicit about trade-offs**:
 
 * `digamma` — fast, accurate enough for many numeric workloads (asymptotic tail4)
 * `digamma12` — slower, but near double-precision where it matters
@@ -63,7 +63,7 @@ const y0 = square(a, b);      // fast
 const y1 = square12(a, b);    // precise
 ```
 
-**Poles:** for x ∈ {0, −1, −2, …}, kMath returns `Infinity` (no throw).
+**Poles:** for x ∈ {0, −1, −2, …}, kmath returns `Infinity` (no throw).
 **Left half-plane:** reflection `ψ(x) = ψ(1−x) − πcot(πx)` is handled robustly.
 
 ---
@@ -97,7 +97,7 @@ const y1 = square12(a, b);    // precise
 
 * **Fastest:** `K.digammaUltra` at this scale. It wins on wall-clock but trades accuracy hard (percent-level errors).
 * **Best speed/accuracy balance:** `K.digamma` — nearly as fast as `digammaFast`, **orders of magnitude** tighter error than common libs.
-* **Gold standard:** `K.digamma12` — slowest of kMath’s variants but delivers **near-machine-precision** vs the 18-term reference.
+* **Gold standard:** `K.digamma12` — slowest of kmath’s variants but delivers **near-machine-precision** vs the 18-term reference.
 * **Other libraries:** in this run, `math-digamma`, `@stdlib` digamma/polygamma show **higher RMS / Max errors** (long-tail reflection choices) and are slower. `cephes` through WASM is accurate-ish but pays a large interop cost and reports an error at a pole (as expected from its API).
 
 > Benchmarks vary with engine/JIT/hardware. The trends above have been stable across V8/SpiderMonkey, but absolute times differ.
@@ -139,7 +139,7 @@ export const H12: (x: number) => number;
 export function square(a: number, b: number): number;
 export function square12(a: number, b: number): number;
 
-export function kMath(): Readonly<{
+export function kmath.js(): Readonly<{
   TAU, HALF_PI, EULER_GAMMA, ZETA2, TWO_LN2, SQRT_2PI,
   digamma, digamma12, digammaFast, H, H12, square, square12
 }>;
