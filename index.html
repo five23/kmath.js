@@ -432,7 +432,7 @@
           <div class="controls">
             <button id="genDocsBtn">Regenerate</button>
             <span class="muted"
-              >Parses <span class="mono">../javascripts/kmath.js</span> comments at
+              >Parses <span class="mono">./kmath.js</span> comments at
               runtime.</span
             >
           </div>
@@ -452,7 +452,7 @@
         square,
         square12,
         TAU,
-      } from "../javascripts/kmath.js";
+      } from "./kmath.js";
 
       const $ = (id) => document.getElementById(id);
 
@@ -829,7 +829,7 @@
 
       // ---------- Docs tab (parse JSDoc from kmath.js) ----------
       async function generateDocs() {
-        const url = "../javascripts/kmath.js";
+        const url = "./kmath.js";
         let src = "";
         try {
           const res = await fetch(url);
