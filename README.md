@@ -195,7 +195,3 @@ The repo includes a **demo page** with:
 ## License
 
 MIT. Use it, ship it, have fun.
-
----
-
-If you want this README split into `README.md` + a `BENCHMARKS.md` with more runs (e.g., 20k / 200k / 2M / 50M) and a short note on JIT phase changes, I can prep those next.
