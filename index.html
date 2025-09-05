@@ -1,71 +1,910 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>kmath.js by five23</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>kMath Demo — Digamma & Waveshaper</title>
+    <style>
+      :root {
+        --bg: #0b0d10;
+        --card: #12161b;
+        --ink: #e8eef6;
+        --muted: #9fb3c8;
+        --accent: #7dd3fc;
+        --accent2: #a78bfa;
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --err: #f87171;
+        --radius: 16px;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+          Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 32px auto;
+        padding: 0 16px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0;
+        letter-spacing: 0.3px;
+      }
+      .note {
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+      .card {
+        grid-column: span 12;
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        padding: 16px 16px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      @media (min-width: 900px) {
+        .span6 {
+          grid-column: span 6;
+        }
+        .span8 {
+          grid-column: span 8;
+        }
+        .span4 {
+          grid-column: span 4;
+        }
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 10px 0;
+        font-weight: 700;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-end;
+        margin: 10px 0 12px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      input[type="number"],
+      input[type="text"],
+      input[type="range"],
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: #0f1318;
+        color: var(--ink);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px 12px;
+        outline: none;
+      }
+      input[type="range"] {
+        height: 32px;
+        padding: 0;
+      }
+      button {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #0b0d10;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(125, 211, 252, 0.25);
+      }
+      button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: none;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .pill {
+        padding: 6px 10px;
+        background: #0f1318;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+      }
+      canvas {
+        width: 100%;
+        height: 220px;
+        background: #0a0d11;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: block;
+      }
+      .code {
+        background: #0a0d11;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 10px;
+        overflow: auto;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .ok {
+        color: var(--ok);
+      }
+      .err {
+        color: var(--err);
+      }
+      .warn {
+        color: var(--warn);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      td {
+        padding: 6px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      }
+      th {
+        text-align: left;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      td.num {
+        text-align: right;
+      }
+      .winner {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #0f1318;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      /* tabs */
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .tab-btn {
+        background: #0f1318;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--ink);
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #0b0d10;
+        border-color: transparent;
+      }
+      [data-tab] {
+        display: none;
+      }
+      [data-tab].active {
+        display: block;
+      }
+      .doc-item {
+        padding: 10px;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      }
+      .doc-name {
+        font-weight: 700;
+      }
+      .tag {
+        display: inline-block;
+        margin: 2px 6px 0 0;
+        padding: 2px 6px;
+        border-radius: 999px;
+        background: #0f1318;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      @media (min-width: 900px) {
+        #perf-card {
+          grid-column: span 12;
+        }
+      }
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+      /* Bench table: scroller + tidy cells */
+      #benchOut {
+        overflow: hidden;
+      } /* container */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .benchTbl {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        min-width: 860px;
+      }
+      .benchTbl th,
+      .benchTbl td {
+        padding: 6px 8px;
+        white-space: nowrap;
+      }
+      .benchTbl td.name {
+        max-width: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Keep long error messages from busting the card */
+      details {
+        overflow-wrap: anywhere;
+      }
+    </style>
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrap">
       <header>
-        <h1>kmath.js</h1>
-        <p></p>
-
-        <p class="view"><a href="https://github.com/five23/kmath.js">View the Project on GitHub <small>five23/kmath.js</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/five23/kmath.js/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/five23/kmath.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/five23/kmath.js">View On <strong>GitHub</strong></a></li>
-        </ul>
+        <h1>kMath Demo — Digamma & Waveshaper</h1>
+        <div class="note">
+          Put <span class="mono">kmath.js</span> in the same folder. This page
+          imports it as an ES module.
+        </div>
       </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-go="demo">Demo</button>
+        <button class="tab-btn" data-go="docs">Docs</button>
+      </div>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+      <!-- DEMO TAB -->
+      <div data-tab="demo" class="active">
+        <div class="grid">
+          <!-- DIGAMMA EXPLORER -->
+          <section class="card span6" id="digamma-card">
+            <h2>Digamma Explorer</h2>
+            <div class="controls">
+              <label
+                >Input x
+                <input id="xVal" type="number" step="0.001" value="0.5" />
+              </label>
+              <label
+                >Precision (digamma12)
+                <input id="precVal" type="number" min="6" step="1" value="12" />
+              </label>
+              <button id="evalBtn">Evaluate</button>
+            </div>
+            <div class="row">
+              <div class="pill">Poles at x ∈ {0, −1, −2, ...}</div>
+              <div class="pill">Reflection: ψ(1−x) − ψ(x) = π cot(πx)</div>
+            </div>
+            <div style="margin-top: 10px">
+              <table class="mono">
+                <tbody>
+                  <tr>
+                    <td>ψ(x) fast</td>
+                    <td id="digamma"></td>
+                  </tr>
+                  <tr>
+                    <td>ψ(x) digamma12</td>
+                    <td id="digamma12"></td>
+                  </tr>
+                  <tr>
+                    <td>|Δ|</td>
+                    <td id="digammaDiff"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="muted" style="margin-top: 8px">
+              Known values: ψ(1) = −γ, ψ(1/2) = −γ − 2 ln 2.
+            </div>
+          </section>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+          <!-- HARMONIC NUMBERS -->
+          <section class="card span6" id="harmonic-card">
+            <h2>Harmonic Numbers</h2>
+            <div class="controls">
+              <label
+                >n (integer)
+                <input id="nVal" type="number" step="1" value="10" />
+              </label>
+              <button id="hEvalBtn">Compute H(n)</button>
+            </div>
+            <div style="margin-top: 10px">
+              <table class="mono">
+                <tbody>
+                  <tr>
+                    <td>H(n) via ψ</td>
+                    <td id="Hn"></td>
+                  </tr>
+                  <tr>
+                    <td>H12(n) via ψ₁₂</td>
+                    <td id="Hn12"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="muted" style="margin-top: 8px">H(n) = ψ(n+1) + γ</div>
+          </section>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+          <!-- WAVESHAPER -->
+          <section class="card span12" id="waveshaper-card">
+            <h2>Square Waveshaper (digamma-based)</h2>
+            <div class="controls">
+              <label
+                >Parameter b
+                <input
+                  id="bVal"
+                  type="range"
+                  min="0"
+                  max="16"
+                  step="0.1"
+                  value="8"
+                />
+              </label>
+              <label
+                >Samples
+                <input
+                  id="samplesVal"
+                  type="number"
+                  min="128"
+                  step="128"
+                  value="1024"
+                />
+              </label>
+              <label
+                >Mode
+                <select id="modeVal">
+                  <option value="fast">fast (ψ)</option>
+                  <option value="prec">precise (ψ₁₂)</option>
+                </select>
+              </label>
+              <button id="drawBtn">Redraw</button>
+            </div>
+            <canvas id="waveCanvas" width="1000" height="260"></canvas>
+            <div class="row" style="margin-top: 8px">
+              <div class="pill">
+                y = ½( cos(τ b cos a) · (ψ(¾−bc) − ψ(¼−bc))/π − 1 )
+              </div>
+              <div class="pill">drag b to morph the spectrum</div>
+            </div>
+          </section>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+          <!-- PERF & ACCURACY -->
+          <section class="card span4" id="perf-card">
+            <h2>Performance & Accuracy</h2>
+            <div class="controls">
+              <label
+                >Trials per method
+                <input
+                  id="trialsVal"
+                  type="number"
+                  step="10000"
+                  value="2000000"
+                />
+              </label>
+              <button id="benchBtn">Run benchmark</button>
+            </div>
+            <div class="mono" id="benchOut"></div>
+            <div class="muted" style="margin-top: 8px">
+              Speed: steady-state time over fixed-seed dataset. Accuracy: vs
+              reference ψ<sub>ref</sub>=digamma12(x,18) on a mixed sample
+              (edge-cases + random).
+            </div>
+          </section>
+        </div>
+      </div>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/five23">five23</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+      <!-- DOCS TAB -->
+      <div data-tab="docs">
+        <section class="card" id="docs-card">
+          <h2>API Docs (from JSDoc)</h2>
+          <div class="controls">
+            <button id="genDocsBtn">Regenerate</button>
+            <span class="muted"
+              >Parses <span class="mono">../javascripts/kmath.js</span> comments at
+              runtime.</span
+            >
+          </div>
+          <div id="docsOut" class="mono"></div>
+        </section>
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+
+    <script type="module">
+      import {
+        digamma,
+        digamma12,
+        digammaFast,
+        digammaUltra,
+        H,
+        H12,
+        square,
+        square12,
+        TAU,
+      } from "../javascripts/kmath.js";
+
+      const $ = (id) => document.getElementById(id);
+
+      // Tabs
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll("[data-tab]")
+            .forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          const tab = btn.getAttribute("data-go");
+          document.querySelector(`[data-tab="${tab}"]`).classList.add("active");
+        });
+      });
+
+      // Poles: x ∈ {0, −1, −2, ...} (within tiny tolerance)
+      const EPS_POLE = 1e-12;
+      const isPole = (x) => x <= 0 && Math.abs(x - Math.round(x)) < EPS_POLE;
+
+      // tan hook
+      const TAN_STATS = { calls: 0 };
+      function hookTan() {
+        const orig = Math.tan;
+        Math.tan = function (...args) {
+          TAN_STATS.calls++;
+          return orig.apply(this, args);
+        };
+        return () => {
+          Math.tan = orig;
+        };
+      }
+
+      // ---------- Digamma Explorer ----------
+      function fmt(x) {
+        return Number.isFinite(x) ? x.toFixed(12) : String(x);
+      }
+      function evalDigamma() {
+        const x = parseFloat($("xVal").value);
+        const p = parseInt($("precVal").value, 10) || 12;
+        const f = digamma(x);
+        const g = digamma12(x, p);
+        $("digamma").textContent = fmt(f);
+        $("digamma12").textContent = fmt(g);
+        $("digammaDiff").textContent = fmt(Math.abs(f - g));
+      }
+      $("evalBtn").addEventListener("click", evalDigamma);
+      evalDigamma();
+
+      // ---------- Harmonics ----------
+      function evalH() {
+        const n = Math.max(1, Math.round(parseFloat($("nVal").value)));
+        $("Hn").textContent = fmt(H(n));
+        $("Hn12").textContent = fmt(H12(n));
+      }
+      $("hEvalBtn").addEventListener("click", evalH);
+      evalH();
+
+      // ---------- Waveshaper Canvas ----------
+      const canvas = $("waveCanvas");
+      const ctx = canvas.getContext("2d");
+      function drawWave() {
+        const b = parseFloat($("bVal").value);
+        const N = Math.max(128, Math.round(parseFloat($("samplesVal").value)));
+        const mode = $("modeVal").value;
+        const fn = mode === "fast" ? square : square12;
+
+        const pts = new Float64Array(N);
+        const dy = 0.9;
+        for (let i = 0; i < N; i++) {
+          const a = (i / (N - 1)) * TAU;
+          pts[i] = fn(a, b);
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const W = canvas.width,
+          Hh = canvas.height;
+        ctx.strokeStyle = "rgba(255,255,255,0.12)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, Hh / 2);
+        ctx.lineTo(W, Hh / 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#7dd3fc";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const x = (i / (N - 1)) * W;
+          const y = Hh / 2 - dy * (Hh / 2 - 12) * pts[i];
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      $("drawBtn").addEventListener("click", drawWave);
+      $("bVal").addEventListener("input", drawWave);
+      $("samplesVal").addEventListener("change", drawWave);
+      $("modeVal").addEventListener("change", drawWave);
+      drawWave();
+
+      // ---------- Benchmark: speed + accuracy ----------
+
+      // PRNG & datasets
+      function lcg(seed = 1234567) {
+        let s = seed | 0;
+        return () => (
+          (s = (s * 1664525 + 1013904223) | 0), (s >>> 0) / 0x100000000
+        );
+      }
+      function makeData(N, seed = 42) {
+        const rnd = lcg(seed);
+        const xs = new Float64Array(N);
+        for (let i = 0; i < N; i++) {
+          let x = -3 + 9 * rnd();
+          if (Math.abs(x - Math.round(x)) < 1e-12 && x <= 0) x += 1e-9; // nudge off poles
+          xs[i] = x;
+        }
+        return xs;
+      }
+
+      // Timing
+      function time(fn, xs, warmup = 5000) {
+        const W = Math.min(warmup, xs.length);
+        for (let i = 0; i < W; i++) void fn(xs[i]);
+        const t0 = performance.now();
+        let sum = 0;
+        for (let i = 0; i < xs.length; i++) sum += fn(xs[i]);
+        const t1 = performance.now();
+        return { ms: t1 - t0, sum };
+      }
+
+      // Accuracy helpers
+      function buildAccuracySet(xs) {
+        // mix edge probes + a slice of the random set
+        const probes = [
+          -20, -8.25, -7.9999999, -3.1, -0.4999999, -1e-8, -1e-12, 1e-12, 1e-8,
+          0.25, 0.5, 0.75, 1, 2.3, 10, 12, 100, 1e6,
+        ];
+        const take = Math.min(20000, xs.length);
+        const subset = Array.from(xs.slice(0, take));
+        return probes.concat(subset);
+      }
+
+      function safeCall(fn, x) {
+        try {
+          const y = fn(x);
+          if (Number.isNaN(y)) return { ok: false, err: "NaN", x };
+          if (y === undefined) return { ok: false, err: "undefined", x };
+          return { ok: true, y };
+        } catch (e) {
+          return { ok: false, err: e && e.message ? e.message : String(e), x };
+        }
+      }
+
+      function accuracyAgainstRef(fn, refVals, xsAcc) {
+        let sumAbs = 0,
+          sumSq = 0,
+          maxAbs = 0,
+          bad = 0;
+        const errors = [];
+        for (let i = 0; i < xsAcc.length; i++) {
+          const x = xsAcc[i];
+          const r = refVals[i];
+
+          const call = safeCall(fn, x);
+          if (!call.ok) {
+            errors.push({
+              x,
+              msg: call.err,
+              reason: isPole(x) ? "pole (nonpositive integer)" : "exception",
+            });
+            bad++;
+            continue;
+          }
+          const y = call.y;
+
+          // If either side is infinite but not both in the same way, count as error
+          const bothInfSame =
+            !Number.isFinite(y) && !Number.isFinite(r) && y === r;
+          if (!Number.isFinite(y) || !Number.isFinite(r)) {
+            if (!bothInfSame) {
+              errors.push({
+                x,
+                msg: `finite/∞ mismatch (y=${y}, ref=${r})`,
+                reason: isPole(x) ? "pole (nonpositive integer)" : "domain",
+              });
+              bad++;
+            }
+            continue;
+          }
+
+          // Normal absolute error
+          const e = Math.abs(y - r);
+          sumAbs += e;
+          sumSq += e * e;
+          if (e > maxAbs) maxAbs = e;
+        }
+        const good = xsAcc.length - bad;
+        return {
+          meanAbs: good ? sumAbs / good : NaN,
+          rms: good ? Math.sqrt(sumSq / good) : NaN,
+          maxAbs,
+          bad,
+          errors,
+        };
+      }
+
+      // External libs via CDN
+      async function tryLoad(url, pick) {
+        try {
+          const m = await import(url);
+          const f = pick(m);
+          return typeof f === "function" ? f : null;
+        } catch {
+          return null;
+        }
+      }
+
+      let EXTERNAL_FUNCS = null;
+      async function loadExternalImpls() {
+        if (EXTERNAL_FUNCS) return EXTERNAL_FUNCS;
+        const impls = [];
+
+        const stdlib = await tryLoad(
+          "https://esm.sh/@stdlib/math-base-special-digamma?bundle",
+          (m) => m.default ?? m.digamma ?? m
+        );
+        if (stdlib) impls.push({ name: "stdlib", fn: stdlib });
+
+        const mathdig = await tryLoad(
+          "https://esm.sh/math-digamma?bundle",
+          (m) => m.default ?? m.digamma ?? m
+        );
+        if (mathdig) impls.push({ name: "math-digamma", fn: mathdig });
+
+        const stdPoly = await tryLoad(
+          "https://esm.sh/@stdlib/math-base-special-polygamma?bundle&target=es2022",
+          (m) => {
+            const poly = m.default ?? m;
+            return typeof poly === "function" ? (x) => poly(0, x) : null;
+          }
+        );
+        if (stdPoly)
+          impls.push({ name: "@stdlib polygamma(n=0)", fn: stdPoly });
+
+        try {
+          const mod = await import(
+            "https://esm.sh/cephes?bundle&target=es2022"
+          );
+          const C = mod.default ?? mod;
+          if (C && C.compiled) await C.compiled;
+          if (C && typeof C.psi === "function") {
+            impls.push({ name: "cephes (WASM psi)", fn: (x) => C.psi(x) });
+          }
+        } catch {}
+
+        EXTERNAL_FUNCS = impls;
+        return impls;
+      }
+
+      async function bench() {
+        const trials = Math.max(
+          1000,
+          Math.round(parseFloat($("trialsVal").value))
+        );
+        const xs = makeData(trials, 42);
+
+        const impls = [
+          { name: "K.digamma", fn: digamma },
+          { name: "K.digamma12", fn: (x) => digamma12(x, 12) },
+          { name: "K.digammaFast", fn: digammaFast },
+          { name: "K.digammaUltra", fn: digammaUltra },
+        ];
+        const extras = await loadExternalImpls();
+        for (const e of extras) impls.push(e);
+
+        // Reference values for accuracy on a mixed set
+        const xsAcc = buildAccuracySet(xs);
+        const REF_PREC = 18;
+        const refVals = xsAcc.map((x) => digamma12(x, REF_PREC));
+
+        const unhook = hookTan();
+        const results = impls.map(({ name, fn }) => {
+          TAN_STATS.calls = 0;
+          const timing = time(fn, xs);
+          const acc = accuracyAgainstRef(fn, refVals, xsAcc);
+          return {
+            name,
+            ms: timing.ms,
+            sum: timing.sum,
+            tanCalls: TAN_STATS.calls,
+            ...acc,
+          };
+        });
+        unhook();
+
+        results.sort((a, b) => a.ms - b.ms);
+
+        const rows = results
+          .map(
+            (r) => `
+          <tr>
+            <td>${r.name}</td>
+            <td class="num">${r.ms.toFixed(2)}</td>
+            <td class="num">${r.meanAbs.toExponential(3)}</td>
+            <td class="num">${r.rms.toExponential(3)}</td>
+            <td class="num">${r.maxAbs.toExponential(3)}</td>
+            <td class="num">${r.bad}</td>
+            <td class="num">${r.tanCalls}</td>
+            <td class="num">${r.sum.toFixed(3)}</td>
+          </tr>`
+          )
+          .join("");
+
+        const errorBlocks = results
+          .map((r) => {
+            if (!r.errors || !r.errors.length) return "";
+            const items = r.errors
+              .slice(0, 8)
+              .map(
+                (e) =>
+                  `<li><span class="mono">x=${Number(e.x).toPrecision(
+                    8
+                  )}</span> — <span class="err">${
+                    e.msg
+                  }</span> <span class="muted">(${e.reason})</span></li>`
+              )
+              .join("");
+            const more =
+              r.errors.length > 8
+                ? `<li class="muted">… +${r.errors.length - 8} more</li>`
+                : "";
+            return `
+            <details style="margin-top:6px">
+              <summary><b>${r.name}</b> errors: ${r.errors.length}</summary>
+              <ul style="margin:6px 0 0 16px; padding:0">${items}${more}</ul>
+            </details>`;
+          })
+          .join("");
+        const winner = results[0]?.name ?? "—";
+        const html = `
+          <div class="mono">
+            <div class="muted">fixed-seed dataset · N=${trials} · seed=42 · reference ψ<sub>ref</sub>=digamma12(x, 18) · accuracy set size=${
+          xsAcc.length
+        }</div>
+            <table class="benchTbl" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th class="num">Time (ms)</th>
+                  <th class="num">Mean |Δ|</th>
+                  <th class="num">RMS |Δ|</th>
+                  <th class="num">Max |Δ|</th>
+                  <th class="num">Errors</th>
+                  <th class="num">tan() calls</th>
+                  <th class="num">Sum</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+            <div class="winner">Fastest: ${winner}</div>
+            <div style="margin-top:10px">${
+              errorBlocks || '<span class="muted">No errors.</span>'
+            }</div>
+            <div class="muted" style="margin-top:6px">Errors include exceptions (e.g., “function singularity” at poles), NaNs, or finite/∞ mismatches.</div>
+          </div>`;
+        $("benchOut").innerHTML = html;
+      }
+
+      $("benchBtn").addEventListener("click", bench);
+
+      // ---------- Docs tab (parse JSDoc from kmath.js) ----------
+      async function generateDocs() {
+        const url = "../javascripts/kmath.js";
+        let src = "";
+        try {
+          const res = await fetch(url);
+          src = await res.text();
+        } catch {
+          $(
+            "docsOut"
+          ).innerHTML = `<div class="err">Failed to fetch ${url}. Serve over http(s) rather than file:// or adjust path.</div>`;
+          return;
+        }
+
+        // Capture /** ... */ followed by export function/const ...
+        const blocks = [];
+        const re =
+          /\/\*\*([\s\S]*?)\*\/\s*(export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)|export\s+const\s+([A-Za-z_$][\w$]*))/g;
+        let m;
+        while ((m = re.exec(src)) !== null) {
+          const doc = m[1].trim();
+          const fn = m[3] || null;
+          const cst = m[4] || null;
+          const name = fn || cst;
+          const kind = fn ? "function" : "const";
+          // summary = first non-tag line
+          const lines = doc.split("\n").map((s) => s.replace(/^\s*\*?\s?/, ""));
+          const noTags = lines.filter((l) => !l.trim().startsWith("@"));
+          const summary = (noTags.find((l) => l.trim().length) || "")
+            .replace(/\s+/g, " ")
+            .trim();
+          const tags = lines
+            .filter((l) => l.trim().startsWith("@"))
+            .map((t) => t.trim());
+          blocks.push({ name, kind, summary, tags });
+        }
+
+        // Render
+        if (!blocks.length) {
+          $(
+            "docsOut"
+          ).innerHTML = `<div class="warn">No JSDoc blocks found next to exports. Make sure comments use <span class="mono">/** ... */</span> immediately above <span class="mono">export</span> lines.</div>`;
+          return;
+        }
+
+        const consts = blocks.filter((b) => b.kind === "const");
+        const funcs = blocks.filter((b) => b.kind === "function");
+
+        function renderList(arr, title) {
+          const items = arr
+            .map(
+              (b) => `
+            <div class="doc-item">
+              <div class="doc-name">${b.name} <span class="muted">(${
+                b.kind
+              })</span></div>
+              <div>${
+                b.summary || '<span class="muted">No summary.</span>'
+              }</div>
+              <div>${b.tags
+                .map((t) => `<span class="tag">${t}</span>`)
+                .join("")}</div>
+            </div>`
+            )
+            .join("");
+          return `<div class="card" style="margin-top:12px">
+            <h2>${title}</h2>
+            ${items || '<div class="muted">—</div>'}
+          </div>`;
+        }
+
+        $("docsOut").innerHTML =
+          renderList(consts, "Constants") + renderList(funcs, "Functions");
+      }
+
+      $("genDocsBtn").addEventListener("click", generateDocs);
+      // auto-generate once on open
+      // generateDocs();
+    </script>
   </body>
 </html>
