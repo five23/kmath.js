@@ -121,7 +121,6 @@ const y1 = square12(a, b);    // precise
 // constants
 export const TAU: number;            // 2π
 export const HALF_PI: number;        // π/2
-export const INV_PI: number;         // 1/π
 export const EULER_GAMMA: number;    // 0.5772156649…
 export const ZETA2: number;          // π²/6
 export const TWO_LN2: number;        // 2 ln 2
@@ -138,11 +137,6 @@ export const H12: (x: number) => number;
 
 export function square(a: number, b: number): number;
 export function square12(a: number, b: number): number;
-
-export function kmath.js(): Readonly<{
-  TAU, HALF_PI, EULER_GAMMA, ZETA2, TWO_LN2, SQRT_2PI,
-  digamma, digamma12, digammaFast, H, H12, square, square12
-}>;
 ```
 
 ### Behavior notes
