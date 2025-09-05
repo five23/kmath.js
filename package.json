@@ -1,0 +1,17 @@
+{
+  "name": "kmath.js",
+  "version": "0.1.0",
+  "description": "fast JS digamma implementation built with waveshaping in mind",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./js/kmath.js",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "files": ["js/", "types/", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "keywords": ["digamma", "psi", "harmonic numbers", "dsp", "waveshaper", "numerical-analysis", "javascript", "math", "special-functions"],
+  "license": "MIT",
+  "repository": "github:five23/kmath.js"
+}
