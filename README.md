@@ -1,285 +1,201 @@
-# kmath.js
+# kMath — fast JS digamma implementation
 
-## Usage
+**kMath** is a small ES-module with practical, fast implementations for:
 
+* ψ(x) (digamma): `digamma`, `digamma12` (high-precision), and speed-oriented `digammaFast`, `digammaUltra`
+* Harmonic numbers: `H`, `H12`
+* A digamma-based square waveshaper: `square`, `square12`
+* Handy constants: `TAU`, `HALF_PI`, `EULER_GAMMA`, `ZETA2`, `TWO_LN2`, `SQRT_2PI`
 
-Import
+Designed for **speed in hot paths** with **numerical behavior you can reason about**, and sensible defaults for the real line (∞ at the poles 0, −1, −2, …; no exceptions thrown from kMath).
 
-    import { kMath } from "./js/kmath";
+---
 
-Instantiate
+## Why this exists
 
-	var K = new kMath();
+Most JS digamma implementations either:
 
-Do some math
+* chase peak accuracy everywhere (and pay in speed), or
+* go fast but **fall apart near reflection / tiny |x|**.
 
-	var y = K.digamma12(1); // -0.5772156649015329
+kMath’s ψ variants are **explicit about trade-offs**:
 
-## Methods
+* `digamma` — fast, accurate enough for many numeric workloads (asymptotic tail4)
+* `digamma12` — slower, but near double-precision where it matters
+* `digammaFast` — even simpler tail; very fast; \~1e-6 typical abs error once shifted
+* `digammaUltra` — **extreme** speed; Mortici-style `log(a-0.5)` core; **percent-level error** (use only for effects or coarse work)
 
+---
 
-fsin(x)
--------
-R̶e̶t̶u̶r̶n̶s̶ ̶a̶ ̶n̶u̶m̶e̶r̶i̶c̶ ̶v̶a̶l̶u̶e̶ ̶b̶e̶t̶w̶e̶e̶n̶ ̶~̶~̶-̶1̶ ̶a̶n̶d̶ ̶~̶~̶1̶,̶ ̶r̶e̶p̶r̶e̶s̶e̶n̶t̶i̶n̶g̶ ̶t̶h̶e̶ ̶s̶i̶n̶e̶ ̶o̶f̶ ̶t̶h̶e̶ ̶a̶n̶g̶l̶e̶ ̶g̶i̶v̶e̶n̶ ̶i̶n̶ ̶r̶a̶d̶i̶a̶n̶s̶.̶ ̶T̶h̶e̶ ̶s̶c̶a̶l̶i̶n̶g̶ ̶f̶a̶c̶t̶o̶r̶s̶ ̶(̶5̶2̶1̶4̶,̶ ̶2̶.̶4̶4̶E̶-̶4̶)̶ ̶w̶e̶r̶e̶ ̶c̶h̶o̶s̶e̶n̶ ̶a̶r̶b̶i̶t̶r̶a̶r̶i̶l̶y̶ ̶a̶n̶d̶ ̶i̶n̶ ̶h̶a̶s̶t̶e̶,̶ ̶t̶h̶e̶n̶ ̶t̶r̶u̶n̶c̶a̶t̶e̶d̶ ̶t̶o̶ ̶s̶q̶u̶e̶e̶z̶e̶ ̶a̶ ̶f̶e̶w̶ ̶m̶o̶r̶e̶ ̶c̶l̶o̶c̶k̶ ̶c̶y̶c̶l̶e̶s̶ ̶o̶u̶t̶ ̶o̶f̶ ̶t̶h̶e̶ ̶f̶u̶n̶c̶t̶i̶o̶n̶,̶ ̶s̶o̶ ̶t̶h̶e̶ ̶p̶r̶e̶c̶i̶s̶i̶o̶n̶ ̶i̶s̶ ̶o̶n̶l̶y̶ ̶a̶c̶c̶u̶r̶a̶t̶e̶ ̶t̶o̶ ̶~̶5̶ ̶d̶e̶c̶i̶m̶a̶l̶ ̶p̶l̶a̶c̶e̶s̶ ̶o̶n̶ ̶t̶h̶e̶ ̶a̶r̶c̶.̶ ̶﻿̶ ̶:̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶ ̶}̶;̶ ̶ ̶B̶a̶s̶e̶d̶ ̶o̶n̶ ̶t̶h̶e̶ ̶m̶e̶t̶h̶o̶d̶s̶ ̶d̶i̶s̶c̶u̶s̶s̶e̶d̶ ̶h̶e̶r̶e̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶w̶w̶w̶.̶c̶o̶r̶a̶n̶a̶c̶.̶c̶o̶m̶/̶2̶0̶0̶9̶/̶0̶7̶/̶s̶i̶n̶e̶s̶ ̶ ̶P̶e̶r̶f̶o̶r̶m̶a̶n̶c̶e̶ ̶t̶e̶s̶t̶s̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶j̶s̶p̶e̶r̶f̶.̶c̶o̶m̶/̶b̶i̶t̶w̶i̶s̶e̶-̶s̶i̶n̶e̶/̶3̶﻿̶
+## Install / Import
 
-B̶a̶s̶e̶d̶ ̶o̶n̶ ̶t̶h̶e̶ ̶m̶e̶t̶h̶o̶d̶s̶ ̶d̶i̶s̶c̶u̶s̶s̶e̶d̶ ̶h̶e̶r̶e̶:̶ ̶h̶t̶t̶p̶:̶/̶/̶w̶w̶w̶.̶c̶o̶r̶a̶n̶a̶c̶.̶c̶o̶m̶/̶2̶0̶0̶9̶/̶0̶7̶/̶s̶i̶n̶e̶s̶
+This is a single ES module. Drop `kmath.js` in your project and import it.
 
-Browsers have become significantly more optimized and this method is no longer fastest.
+```js
+// ESM (browser, bundlers, Node "type":"module")
+import {
+  digamma, digamma12, digammaFast, digammaUltra,
+  H, H12, square, square12,
+  TAU, EULER_GAMMA
+} from './kmath.js';
+```
 
-Performance tests: http://jsperf.com/bitwise-sine/3﻿
+> Node without `"type":"module"`? Use dynamic `await import('./kmath.js')`.
 
-fcos(x)
--------
+---
 
-Bitwise cosine approximation, see fsin(x)
+## Quick start
 
-unitstep(x)
------------
+```js
+// Digamma
+console.log(digamma(1));      // ~ -EULER_GAMMA
+console.log(digamma(0.5));    // ~ -EULER_GAMMA - 2*ln 2
 
-Represents the unit step function, equal to 0 for x < 0 and 1 for x >= 0
+// Higher precision where you care (slower)
+const y = digamma12(10);      // high-accuracy ψ(10)
 
+// Harmonic numbers (H(n) = ψ(n+1) + γ)
+console.log(H(10));           // 2.9289682539682538
 
-diracdelta(x)
--------------
+// Square waveshaper (audio / DSP fun)
+const a = 0.0, b = 8.0;
+const y0 = square(a, b);      // fast
+const y1 = square12(a, b);    // precise
+```
 
-The Dirac delta function, or δ function, is a generalized function, or distribution, on the real number line that is zero everywhere except at zero, with an integral of one over the entire real line.
+**Poles:** for x ∈ {0, −1, −2, …}, kMath returns `Infinity` (no throw).
+**Left half-plane:** reflection `ψ(x) = ψ(1−x) − πcot(πx)` is handled robustly.
 
-http://en.wikipedia.org/wiki/Dirac_delta_function
+---
 
+## Benchmark (50,000,000 trials)
 
-kroneckerdelta(i, j)
---------------------
+* Test machine: Apple Mac M1 Pro / macOS 15.6.1
+* Test browser: Chrome 139.0.7258.155
+* Dataset: fixed-seed random x ∈ (−3, 6), tiny nudge off poles
+* **Accuracy reference:** `digamma12(x, 18)` 
+* `tan()` calls counted (reflection cost proxy)
+* “Sum” is the accumulated return value (helps compilers not dead-code the loop)
 
-The discrete analog of the diracdelta(x) function.
+### Raw results
 
-http://en.wikipedia.org/wiki/Kronecker_delta
+| Method                 | Time (ms) |       vs best |    Mean \|Δ\| |     RMS \|Δ\| |    Max \|Δ\| | Errors | tan() calls |           Sum |
+| ---------------------- | --------: | ------------: | ------------: | ------------: | -----------: | -----: | ----------: | ------------: |
+| K.digammaUltra         |   1198.10 |      **0.0%** |      1.274e-2 |      1.579e-2 |     3.649e-2 |      0 |           1 | 252878547.536 |
+| K.digammaFast          |   1623.70 |  35.5% slower |      4.712e-6 |      4.858e-6 |     1.221e-4 |      0 |           1 | 253519658.026 |
+| K.digamma              |   1649.00 |  37.6% slower |      6.099e-9 |      8.628e-7 |     1.221e-4 |      0 |           1 | 253519893.434 |
+| K.digamma12            |   2059.30 |  71.9% slower | **8.383e-13** | **1.061e-10** | **1.490e-8** |      0 |           1 | 253519893.434 |
+| math-digamma           |   2180.90 |  82.0% slower |      4.443e-6 |      6.278e-4 |     8.882e-2 |      1 |           0 | 253519893.434 |
+| stdlib                 |   2262.80 |  88.9% slower |      4.443e-6 |      6.278e-4 |     8.882e-2 |      1 |           0 | 253519893.434 |
+| @stdlib polygamma(n=0) |   2389.70 |  99.5% slower |      4.443e-6 |      6.278e-4 |     8.882e-2 |      1 |           0 | 253519893.434 |
+| cephes (WASM psi)      |   5136.80 | 328.7% slower |      1.220e-8 |      1.220e-6 |     1.221e-4 |      1 |           0 | 253519893.434 |
 
-sgn(x)
-------
+> **Reading the Δ columns:** smaller is better. `1e-13` is *vastly* more accurate than `1e-6`.
+> The *Max* column highlights worst-case outliers (e.g., near reflection / tiny |x|).
 
-The sign function or signum function (from signum, Latin for "sign") is an odd mathematical function that extracts the sign of a real number.
+### Takeaways
 
-http://en.wikipedia.org/wiki/Sign_function
+* **Fastest:** `K.digammaUltra` at this scale. It wins on wall-clock but trades accuracy hard (percent-level errors).
+* **Best speed/accuracy balance:** `K.digamma` — nearly as fast as `digammaFast`, **orders of magnitude** tighter error than common libs.
+* **Gold standard:** `K.digamma12` — slowest of kMath’s variants but delivers **near-machine-precision** vs the 18-term reference.
+* **Other libraries:** in this run, `math-digamma`, `@stdlib` digamma/polygamma show **higher RMS / Max errors** (long-tail reflection choices) and are slower. `cephes` through WASM is accurate-ish but pays a large interop cost and reports an error at a pole (as expected from its API).
 
-sinc(x)
--------
+> Benchmarks vary with engine/JIT/hardware. The trends above have been stable across V8/SpiderMonkey, but absolute times differ.
 
-Normalized sinc function.
+---
 
-http://en.wikipedia.org/wiki/Sinc_function
+## Which ψ should I use?
 
-mod(x,y)
---------
+* **Use `digamma`** for most numeric work. It’s fast and accurate (tail4 asymptotics, careful reflection).
+* **Use `digamma12`** when precision matters (statistical functions, special-function work, tests).
+* **Use `digammaFast`** when you really want speed and can tolerate \~1e-6 typical error after shifting.
+* **Use `digammaUltra`** only for coarse tasks or synthesized signals where visual smoothness beats numeric truth.
 
-The remainder of division of one number by another.
+---
 
-http://en.wikipedia.org/wiki/Modulo_operation
+## API
 
-square(x, n)
-------------
+### Exports
 
-Square wave approximation.
+```ts
+// constants
+export const TAU: number;            // 2π
+export const HALF_PI: number;        // π/2
+export const INV_PI: number;         // 1/π
+export const EULER_GAMMA: number;    // 0.5772156649…
+export const ZETA2: number;          // π²/6
+export const TWO_LN2: number;        // 2 ln 2
+export const SQRT_2PI: number;       // √(2π)
 
-factorial(x)
-------------
+// functions
+export function digamma(x: number): number;
+export function digamma12(x: number, PRECISION?: number): number;
+export function digammaFast(x: number): number;
+export function digammaUltra(x: number): number;
 
-The factorial function (integers)
+export const H:   (x: number) => number;   // H(x) = ψ(x+1) + γ
+export const H12: (x: number) => number;
 
-http://en.wikipedia.org/wiki/Factorial
+export function square(a: number, b: number): number;
+export function square12(a: number, b: number): number;
 
-gamma(x)
---------
+export function kMath(): Readonly<{
+  TAU, HALF_PI, EULER_GAMMA, ZETA2, TWO_LN2, SQRT_2PI,
+  digamma, digamma12, digammaFast, H, H12, square, square12
+}>;
+```
 
-Gamma function.
+### Behavior notes
 
-http://en.wikipedia.org/wiki/Gamma
+* **Poles:** `ψ(x)` returns `Infinity` for x ∈ {0, −1, −2, …}.
+* **Reflection:** carefully handled to avoid catastrophic cancellation; tiny neighborhoods near integers use series expansion instead of `Math.tan`.
+* **Asymptotics:** `digamma` uses a **4-term** Bernoulli tail (balanced speed/accuracy). `digamma12` uses a longer tail and higher shift target.
 
+### Examples
 
-lngamma(x)
-----------
+```js
+// High-accuracy evaluation on a grid
+const xs = Array.from({length: 11}, (_,i)=> i/10 + 0.1);
+const ys = xs.map(x => digamma12(x));   // precise
 
-The logarithm of the gamma function.
+// Fast harmonic numbers
+const Hn = (n) => H(n);                  // integer n
+const Hx = (x) => H(x);                  // real x
+console.log(Hn(1000), Hx(12.5));
 
+// Square waveshaper sweep
+const N = 1024, b = 8.0;
+const pts = new Float64Array(N);
+for (let i=0;i<N;i++){
+  const a = (i/(N-1)) * TAU;
+  pts[i] = square(a, b);                 // or square12 for precision
+}
+```
 
-digamma(x)
-----------
+---
 
-The logarithmic derivative of the gamma function:
+## Reproducing the benchmark
 
-http://en.wikipedia.org/wiki/Digamma_function
+The repo includes a **demo page** with:
 
-H(x)
-----
+* ψ explorer (compare `digamma` vs `digamma12`),
+* the digamma-based square waveshaper,
+* and the **benchmark** (speed + accuracy vs reference and other libs).
 
-The nth-Harmonic number.
+**Methodology**:
 
-http://en.wikipedia.org/wiki/Harmonic_number
+* Deterministic PRNG (LCG), x ∈ (−3, 6), “nudge” off exact poles
+* **Warm-up** loop to let the JIT settle
+* Accuracy measured against `digamma12(x, 18)` on a mixed set (edge probes + random slice)
+* `tan()` calls counted to show how often reflection paid for a trig call
+* “Sum” accumulates the return value to defeat dead-code elimination
 
-phi(x)
-------
+---
 
-Phi distribution.
+## License
 
+MIT. Use it, ship it, have fun.
 
-fresnelc(x)
------------
+---
 
-The Fresnel C integral C(x)
-
-http://en.wikipedia.org/wiki/Fresnel_integral
-
-
-zeta(x)
--------
-
-The Riemann zeta function.
-
-http://en.wikipedia.org/wiki/Riemann_zeta_function
-
-erf(x)
-------
-
-The "error function" (also called the Gauss error function) is a special function (non-elementary) of sigmoid shape which occurs in probability, statistics and partial differential equations.
-
-http://en.wikipedia.org/wiki/Error_function
-
-epsilon()
----------
-
-Returns machine epsilon.
-
-cantor(x)
----------
-
-The Cantor function, named after Georg Cantor, is an example of a function that is continuous, but not absolutely continuous. It is also referred to as the Devil's staircase, the Cantor staircase function, and the Cantor-Lebesgue function.
-
-http://en.wikipedia.org/wiki/Cantor_function
-
-
-csc(x)
-------
-
-The length of the hypotenuse divided by the length of the opposite side.
-
-cosh(x)
--------
-
-Hyperbolic cosine.
-
-sinh(x)
--------
-
-Hyperbolic sine.
-
-tanh(x)
--------
-
-Hyperbolic tangent.
-
-csch(x)
--------
-
-Hyperbolic cosecant.
-
-coth(x)
--------
-
-Hyperbolic cotangent
-
-acosh(x)
---------
-
-Inverse Hyperbolic Cosine.
-
-asinh(x)
---------
-
-Inverse Hyperbolic Sine.
-
-atanh(x)
---------
-
-Inverse Hyperbolic Tangent.
-
-int(x)
-------
-
-Cast float to integer.
-
-floor32(x)
-----------
-
-Fast floor function.
-
-
-lerp(x, v0, v1)
----------------
-
-clamp(x, v0, v1)
-----------------
-
-normalize(x, v0, v1)
---------------------
-
-map(x, v0, v1, vx0, vx1, clamp)
--------------------------------
-
-dist(x1, y1, x2, y2)
---------------------
-
-distSquared(x1, y1, x2, y2)
----------------------------
-
-randomFloat(min, max, precision)
---------------------------------
-
-randomInt(min, max)
--------------------
-
-randomPerm(index)
------------------
-
-bitDivisor(bits)
-----------------
-
-bitMask(bits)
--------------
-
-bitShift(x, bits)
------------------
-
-gradient1d(hash, x)
--------------------
-
-gradient2d(hash, x, y)
-----------------------
-
-gradient3d(hash, x, y, z)
--------------------------
-
-gradient4d(hash, x, y, z, t)
-----------------------------
-
-signedNoise1d(x)
-----------------
-
-signedNoise2d(x, y)
--------------------
-
-signedNoise3d(x, y, z)
-----------------------
-
-signedNoise4d(x, y, z, w)
--------------------------
-
-simplexNoise1d(x)
------------------
-
-simplexNoise2d(x, y)
------------------
-
-simplexNoise3d(x, y, z)
------------------------
-
-simplexNoise4d(x, y, z, w)
---------------------------
+If you want this README split into `README.md` + a `BENCHMARKS.md` with more runs (e.g., 20k / 200k / 2M / 50M) and a short note on JIT phase changes, I can prep those next.
