@@ -68,7 +68,7 @@ const y1 = square12(a, b);    // precise
 
 ---
 
-## Benchmark (50,000,000 trials)
+## Benchmarks
 
 * Test machine: Apple Mac M1 Pro / macOS 15.6.1
 * Test browser: Chrome 139.0.7258.155
@@ -77,18 +77,52 @@ const y1 = square12(a, b);    // precise
 * `tan()` calls counted (reflection cost proxy)
 * “Sum” is the accumulated return value (helps compilers not dead-code the loop)
 
-### Raw results
+### 1 million trials
+
+| Method                 | Time (ms) |  Mean ∣Δ∣ |   RMS ∣Δ∣ |  Max ∣Δ∣ |            Sum |
+| ---------------------- | --------: | --------: | --------: | -------: | -------------: |
+| K.digammaUltra.        |     24.00 |  1.274e-2 |  1.579e-2 | 3.649e-2 | −2,576,623.534 |
+| K.digammaFast          |     32.70 |  4.712e-6 |  4.858e-6 | 1.221e-4 | −2,563,796.177 |
+| K.digamma              |     41.30 |  6.099e-9 |  8.628e-7 | 1.221e-4 | −2,563,791.470 |
+| K.digamma12            |     41.60 | 8.383e-13 | 1.061e-10 | 1.490e-8 | −2,563,791.470 |
+| math-digamma           |     43.90 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −2,563,791.470 |
+| stdlib                 |     45.30 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −2,563,791.470 |
+| @stdlib polygamma(n=0) |     48.50 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −2,563,791.470 |
+| cephes (WASM psi)      |     97.60 |  1.220e-8 |  1.220e-6 | 1.221e-4 | −2,563,791.470 |
+
+---
+
+### 5 million trials
+
+| Method                 |  Time (ms) |  Mean ∣Δ∣ |   RMS ∣Δ∣ |  Max ∣Δ∣ |            Sum |
+| ---------------------- | ---------: | --------: | --------: | -------: | -------------: |
+| K.digammaUltra         |     121.40 |  1.274e-2 |  1.579e-2 | 3.649e-2 | −8,385,645.662 |
+| K.digammaFast          |     164.70 |  4.712e-6 |  4.858e-6 | 1.221e-4 | −8,321,528.812 |
+| K.digamma              |     165.60 |  6.099e-9 |  8.628e-7 | 1.221e-4 | −8,321,505.269 |
+| K.digamma12            |     207.60 | 8.383e-13 | 1.061e-10 | 1.490e-8 | −8,321,505.269 |
+| math-digamma           |     221.10 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −8,321,505.269 |
+| stdlib                 |     229.40 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −8,321,505.269 |
+| @stdlib polygamma(n=0) |     243.80 |  4.443e-6 |  6.278e-4 | 8.882e-2 | −8,321,505.269 |
+| cephes (WASM psi)      |     490.80 |  1.220e-8 |  1.220e-6 | 1.221e-4 | −8,321,505.269 |
+
+---
+
+### 50 million trials
 
 | Method                 | Time (ms) |    Mean \|Δ\| |     RMS \|Δ\| |    Max \|Δ\| |           Sum |
 | ---------------------- | --------: | ------------: | ------------: | -----------: | ------------: |
 | K.digammaUltra         |   1198.10 |      1.274e-2 |      1.579e-2 |     3.649e-2 | 252878547.536 |
 | K.digammaFast          |   1623.70 |      4.712e-6 |      4.858e-6 |     1.221e-4 | 253519658.026 |
 | K.digamma              |   1649.00 |      6.099e-9 |      8.628e-7 |     1.221e-4 | 253519893.434 |
-| K.digamma12            |   2059.30 | **8.383e-13** | **1.061e-10** | **1.490e-8** | 253519893.434 |
+| K.digamma12            |   2059.30 |     8.383e-13 |     1.061e-10 |     1.490e-8 | 253519893.434 |
 | math-digamma           |   2180.90 |      4.443e-6 |      6.278e-4 |     8.882e-2 | 253519893.434 |
 | stdlib                 |   2262.80 |      4.443e-6 |      6.278e-4 |     8.882e-2 | 253519893.434 |
 | @stdlib polygamma(n=0) |   2389.70 |      4.443e-6 |      6.278e-4 |     8.882e-2 | 253519893.434 |
 | cephes (WASM psi)      |   5136.80 |      1.220e-8 |      1.220e-6 |     1.221e-4 | 253519893.434 |
+
+---
+
+### Notes
 
 > **Reading the Δ columns:** smaller is better. `1e-13` is *vastly* more accurate than `1e-6`.
 > The *Max* column highlights worst-case outliers (e.g., near reflection / tiny |x|).
@@ -99,6 +133,7 @@ const y1 = square12(a, b);    // precise
 * **Best speed/accuracy balance:** `K.digamma` — nearly as fast as `digammaFast`, **orders of magnitude** tighter error than common libs.
 * **Gold standard:** `K.digamma12` — slowest of kmath’s variants but delivers **near-machine-precision** vs the 18-term reference.
 * **Other libraries:** in this run, `math-digamma`, `@stdlib` digamma/polygamma show **higher RMS / Max errors** (long-tail reflection choices) and are slower. `cephes` through WASM is accurate-ish but pays a large interop cost and reports an error at a pole (as expected from its API).
+* kMath never throws at poles; it returns `Infinity` for x ∈ {0, −1, −2, …}. Third-party libraries may surface errors there by design.
 
 > Benchmarks vary with engine/JIT/hardware. The trends above have been stable across V8/SpiderMonkey, but absolute times differ.
 
