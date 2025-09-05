@@ -1,4 +1,4 @@
-# kMath — fast JS digamma implementation
+# kmath.js — fast JS digamma implementation
 
 **kMath** is a small ES-module with practical, fast implementations for:
 
