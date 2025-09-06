@@ -1,4 +1,4 @@
-# kmath.js — fast JS digamma implementation
+# kmath.js — fast JS digamma (ψ)
 
 DEMO: http://five23.github.io/kmath.js/
 
