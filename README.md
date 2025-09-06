@@ -1,5 +1,7 @@
 # kmath.js — fast JS digamma implementation
 
+DEMO: http://five23.github.io/kmath.js/
+
 **kmath** is a small ES-module with practical, fast implementations for:
 
 * ψ(x) (digamma): `digamma`, `digamma12` (high-precision), and speed-oriented `digammaFast`, `digammaUltra`
